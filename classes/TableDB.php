@@ -16,6 +16,7 @@ require_once 'TimePeriod.php';
  * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
  * @name TableDB
  * @desc Classe com as Operações da base de dados<br>Operações CRUD, funções de agregação e outras
+ * <br> Permite Inserir, Actalizar, Eliminar, Listar, Ordenar e outras manipulações de registos
  * @copyright 2020   
  */
 abstract class TableDB implements CRUD, Calculation
@@ -70,6 +71,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Faz a Inserção de Dados na tabela
      * @param array $obj
      * @return boolean
+     * @example: $tb->insert(['nome'=>'Joao', 'idade'=>23]); 
      *
      * */
     public function insert(array $obj) : bool
@@ -120,7 +122,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $obj
      * @param int $id
      * @return boolean
-     *
+     * @example: $tb->update(['nome'=>'Maria', 'idade'=>26], 1); 
      * */
     public function update(array $obj, int $id) : bool
     {
@@ -171,7 +173,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $obj
      * @param array $condicoes
      * @return boolean
-     *
+     * @example: $tb->updateWhere(['nome'=>'Maria José', 'idade'=>29], ['nome'=>'Maria']);
      * */
     public function updateWhere(array $obj, array $condicoes) : bool
     {
@@ -226,7 +228,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Faz a Substituição de Dados na tabela
      * @param array $values
      * @return boolean
-     *
+     * @example: $tb->replace(1, 'Maria Jose Pedro', 34);
      * */
     public function replace(array $values) : bool
     {
@@ -263,7 +265,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna um registo da  atraves do ID passado
      * @param int $id
      * @return object
-     *
+     * @example: $tb->find(1);
      * */
     public function find(int $id) : object
     {
@@ -290,7 +292,7 @@ abstract class TableDB implements CRUD, Calculation
      * @name findAll
      * @desc Retorna todos registos da Tabela 
      * @return array
-     *
+     * @example: $tb->findAll();
      * */
     public function findAll() : array
     {
@@ -316,7 +318,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Elimina um registo da tabela através do Id
      * @param int $id
      * @return bool
-     *
+     * @example: $tb->delete(6);
      * */
     public function delete(int $id) : bool
     {
@@ -347,7 +349,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param int $id
      * @param mixed $valor
      * @return bool
-     *
+     *  @example: $tb->deleteOnly('nome', 'Maria');
      * */
     public function deleteOnly(string $campo, $valor) : bool
     {
@@ -378,7 +380,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $valores
      * @return bool
-     *
+     * @example: $tb->deleteMany('id', [1, 3, 5]);
+     *      <br> $tb->deleteMany('nome', ['Maria', 'Paulo']);
      * */
     public function deleteMany(string $campo, array $valores) : bool
     {
@@ -396,7 +399,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @param string $operador
      * @return bool
-     *
+     * @example: $tb->deleteWhere(['idade'=>25, 'nome'=>'António'], 'OR');
+     *  <br> $tb->deleteWhere(['nome'=>'José']);
      * */
     public function deleteWhere(array $condicoes, string $operador='AND') : bool
     {
@@ -430,12 +434,14 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David 
      * @copyright 2020
      * @name search
-     * @desc Busca os registos numa tabela, obedecendo as condições dadas e os operadores
+     * @desc Faz uma simples Busca os registos numa tabela, obedecendo as condições dadas e os operadores
      *      <br>Operadores lógicos: <i>AND</i> e <i>OR</i> <br> Operadores relacionais: <i>LIKE</i>, <i>'='</i> e <i><></i>
      * @param array $condicoes
      * @param string $opLogico
      * @param string $opRelacional
      * @return array
+     * @example: $tb->search(['sexo'=>'Feminino']);
+     *      <br> $tb->search(['idade'=>27, 'sexo'=>'Masculino'], 'AND', '=');
      * */
     public function search(array $condicoes, string $opLogico='OR', string $opRelacional='LIKE') : array
     {
@@ -477,7 +483,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Verifica se um registo existe através das condições passadas
      * @param array $codicoes
      * @return bool
-     *
+     * @example: $tb->exists(['nome'=>'Maria José']);
      * */
     public function exists(array $condicoes) : bool
     {
@@ -512,7 +518,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campoUnico
      * @param mixed $valor
      * @return object
-     *
+     * @example: $tb->unique('email', 'exemplo@gmail.com';
      * */
     public function unique(string $campoUnico, $valor) : object
     {
@@ -539,7 +545,7 @@ abstract class TableDB implements CRUD, Calculation
      * @name first
      * @desc Retorna o primeiro registo da tabela
      * @return object
-     *
+     * @example: $tb->first();
      * */
     public function first() : object
     {
@@ -566,7 +572,7 @@ abstract class TableDB implements CRUD, Calculation
      * @name last
      * @desc Retorna o último registo da tabela
      * @return object
-     *
+     * @example: $tb->last();
      * */
     public function last() : object
     {
@@ -590,9 +596,9 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name middle
-     * @desc Retorna o registo localizado no meio data bela
+     * @desc Retorna o registo localizado no meio data tabela
      * @return object
-     *
+     * @example: $tb->middle();
      * */
     public function middle() : object
     {
@@ -621,7 +627,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $condicoes
      * @return array
-     *
+     * @example: $tb->values('nome');
+     *      <br> $tb->values('idade', ['sexo'=>'Masculino']);
      * */
     public function values(string $campo, array $condicoes=null) : array
     {
@@ -657,11 +664,12 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name between
      * @desc Retorna os registos onde campo está entre inicio e fim
-     * @param mixed $campo
+     * @param string $campo
      * @param mixed $inicio
      * @param mixed $fim
      * @return array
-     *
+     * @example: $tb->between('idade', 20, 43);
+     *      <br> $tb->between('data', '2019-01-01', '2020-12-31');
      * */
     public function between(string $campo, $inicio, $fim) : array
     {
@@ -687,11 +695,12 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name notBetween
      * @desc Retorna  os registos onde campo não está entre inicio e fim
-     * @param mixed $campo
+     * @param string $campo
      * @param mixed $inicio
      * @param mixed $fim
      * @return array
-     *
+     * @example: $tb->notBetween('idade', 20, 43);
+     *      <br> $tb->notBetween('data', '2019-01-01', '2020-12-31');
      * */
     public function notBetween(string $campo, $inicio, $fim) : array
     {
@@ -718,10 +727,11 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name in
      * @desc Retorna um Todos os registos onde campo está no Intervalo (IN)
-     * @param mixed $campo
+     * @param string $campo
      * @param array $valores
      * @return array
-     *
+     * @example: $tb->in('idade', [20, 39, 12, 43]);
+     *      <br> $tb->in('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
     public function in(string $campo, array $valores) : array
     {
@@ -752,11 +762,11 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name isNull
-     * @desc Retorna um Todos os registos onde campo tem o valor nulo
-     * @param mixed $campo
-     * @param array $valores
+     * @desc Retorna um Todos os registos onde o campo está nulo
+     * @param string $campo
      * @return array
-     *
+     * @example: $tb->isNull('altura');
+     *      <br> $tb->isNull('data');
      * */
     public function isNull(string $campo) : array
     {
@@ -782,10 +792,11 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name isNotNull
      * @desc Retorna um Todos os registos onde campo não tem o valor nulo
-     * @param mixed $campo
+     * @param string $campo
      * @param array $valores
      * @return array
-     *
+     * @example: $tb->isNotNull('altura');
+     *      <br> $tb->isNotNull('data');
      * */
     public function isNotNull(string $campo) : array
     {
@@ -811,10 +822,11 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name notIn
      * @desc Retorna um Todos os registos onde campo está no Intervalo (IN)
-     * @param mixed $campo
+     * @param string $campo
      * @param array $valores
      * @return array
-     *
+     *@example: $tb->notIn('idade', [20, 39, 12, 43]);
+     *      <br> $tb->notIn('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
     public function notIn(string $campo, array $valores) : array
     {
@@ -848,7 +860,8 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna um Todos os registos excepto os que cumprem as condições
      * @param array $condicoes
      * @return array
-     *
+     * @example: $tb->except(['sexo'=>'Feminino', 'idade'=>30]);
+     *      <br> $tb->except(['nome'=>'José']);
      * */
     public function except(array $condicoes) : array
     {
@@ -880,7 +893,8 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna apenas os registos  que cumprem as condições
      * @param array $condicoes
      * @return array
-     *
+     *@example: $tb->only(['data'=>'2020-06-08', 'tipo'=>'Normal']);
+     *      <br> $tb->only(['sexo'=>'Masculino']);
      * */
     public function only(array $condicoes) : array
     {
@@ -909,11 +923,11 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name limit
-     * @desc Retorna um Todos os registos  que cumprem as condições
+     * @desc Retorna um Todos os registos no intervalo de início até fim
      * @param int $inicio
      * @param int $fim
      * @return array
-     *
+     * @example: $tb->limit(1, 10);
      * */
     public function limit(int $inicio, int $fim) : array
     {
@@ -939,13 +953,15 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name orderBy
-     * @desc Retorna um Todos os registos  ordenado pelo campo
+     * @desc Retorna um Todos os registos ordenado pelo campo
+     * <br> Por defeito o métdo já faz por Ordem Crescente
      * @param string campo
      * @param string $ordem
      * @return array
-     *
+     * @example: $tb->orderBy('nome');
+     *  <br>     $tb->only('data', 'DESC');
      * */
-    public function orderBy(string $campo, string $ordem) : array
+    public function orderBy(string $campo, string $ordem='ASC') : array
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
@@ -968,9 +984,10 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name distinct
      * @desc Retorna um Todos os campos distintos
+     * <br> Retorna os registos, evitando a duplicação
      * @param string campo
      * @return array
-     *
+     * @example: $tb->distinct('data');
      * */
     public function distinct(string $campo) : array
     {
@@ -997,7 +1014,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna um Todos os registos agrupados pelo campo
      * @param string campo
      * @return array
-     *
+     *  @example: $tb->groupBy('sexo');
      * */
     public function groupBy(string $campo) : array
     {
@@ -1024,9 +1041,11 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name all
      * @desc Retorna um Todos os registos  seguindo ou não as condições e outros parametros
+     *     <br> Também permite usar condições e ordenar os registos
      * @param array $condicoes
      * @return array
-     *
+     * @example: $tb->all();
+     *      <br> $tb->all(['data'=> '2020-10-10', 'sexo'=>'Feminino'], 'nome', 'ASC', 10, 50);
      * */
     public function all(array $condicoes=null, string $campoOrdem=null, string $ordem=null, int $inicio=null, int $fim=null) : array
     {
@@ -1060,13 +1079,17 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name increase
-     * @desc soma um valor ao campo
+     * @desc Incrementa ou soma  um valor ao campo
+     * <br> Pode ser usado para aumentar o saldo de um cliente,
+     * <br> ou Aumentar a quantidade em estoque do produto
      * @param string $campo
      * @param mixed $valor
+     * @param int id
      * @return bool
-     *
+     *  @example: $tb->increase('qtd_stock', 2, 43);
+     *       <br> $tb->increase('saldo_cliente', 1000, 2)
      * */
-    public function increase(string $campo, int $id, $valor) : bool
+    public function increase(string $campo, $valor, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
@@ -1093,14 +1116,18 @@ abstract class TableDB implements CRUD, Calculation
     
     /**@author Ortiz David
      * @copyright 2020
-     * @name decrease
-     * @desc subtrai um valor ao campo
+     * @name increase
+     * @desc Decrementa ou subtrai um valor ao campo
+     * <br> Pode ser usado para diminuir o saldo de um cliente,
+     * <br> ou Dimunir a quantidade em estoque do produto
      * @param string $campo
      * @param mixed $valor
+     * @param int id
      * @return bool
-     *
+     *  @example: $tb->decrease('qtd_stock', 2, 43);
+     *       <br> $tb->deccrease('saldo_cliente', 1000, 2)
      * */
-    public function decrease(string $campo, int $id, $valor) : bool
+    public function decrease(string $campo, $valor, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
@@ -1128,13 +1155,15 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name multiply
-     * @desc multiplica um valor ao campo
+     * @desc Multiplica um valor ao campo
+     * <br> Pode ser usado para multiplicar o valor de um campo, por um número
      * @param string $campo
      * @param mixed $valor
+     * @param int $id
      * @return bool
-     *
+     * @example: $tb->multiply('quantidade', 2.79, 13)
      * */
-    public function multiply(string $campo, int $id, $valor) : bool
+    public function multiply(string $campo, $valor, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
@@ -1162,13 +1191,14 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name divide
-     * @desc divide um valor ao campo
+     * @desc Divide um valor ao campo
+     *  <br> Pode ser usado para dividir o valor de um campo, por um número
      * @param string $campo
      * @param mixed $valor
      * @return bool
-     *
+     * @example: $tb->divide('quantidade', 0.5, 2)
      * */
-    public function divide(string $campo, int $id, $valor) : bool
+    public function divide(string $campo, $valor, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
@@ -1196,9 +1226,9 @@ abstract class TableDB implements CRUD, Calculation
     /**@author Ortiz David
      * @copyright 2020
      * @name count
-     * @desc Retorna o numero de registos da tabela
+     * @desc Retorna o número de registos da tabela
      * @return int
-     *
+     * @example: $tb->count() 
      * */
     public function count() : int
     {
@@ -1224,9 +1254,9 @@ abstract class TableDB implements CRUD, Calculation
      * @name countWhere
      * @desc Retorna o numero de registos da tabela onde o campo igual ao valor
      * @param string $campo 
-     * @param mixed $campo
+     * @param mixed $valor
      * @return int
-     *
+     * @example: $tb->countWhere('sexo', 'Masculino');
      * */
     public function countWhere(string $campo, $valor) : int
     {
@@ -1254,9 +1284,9 @@ abstract class TableDB implements CRUD, Calculation
      * @name countExcept
      * @desc Retorna o numero de registos da tabela, Excepto onde o campo igual ao valor
      * @param string $campo 
-     * @param mixed $campo
+     * @param mixed $valor
      * @return int
-     *
+     * @example  $tb->countExcept('data', '1990-11-10')
      * */
     public function countExcept(string $campo, $valor) : int
     {
@@ -1287,7 +1317,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $condicoes
      * @return mixed
-     *
+     * @example:  $tb->max('salario', ['sexo'=>'Feminino'])
+     *       <br> $tb->max('altura')
      * */
     public function max(string $campo, array $condicoes=null) 
     {
@@ -1323,7 +1354,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $condicoes
      * @return mixed
-     *
+     * @example:  $tb->min('salario', ['sexo'=>'Feminino'])
+     *       <br> $tb->min('altura')
      * */
     public function min(string $campo, array $condicoes=null)
     {
@@ -1359,7 +1391,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $condicoes
      * @return float
-     *
+     * @example:  $tb->sum('salario', ['pais'=>'Angola'])
+     *       <br> $tb->sum('salario')
      * */
     public function sum(string $campo, array $condicoes=null) : float
     {
@@ -1395,7 +1428,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @param array $condicoes
      * @return float
-     *
+     *@example:  $tb->media('altura', ['sexo'=>'Feminino'])
+     *       <br> $tb->media('altura')
      * */
     public function avg(string $campo, array $condicoes=null) : float
     {
@@ -1524,19 +1558,6 @@ abstract class TableDB implements CRUD, Calculation
         return $param;
     }
     
-    
-    /**@author Ortiz David
-     * @copyright 2020
-     * @name criptId
-     * @desc Retorna uma string criptografada, usada como crypt_id
-     * @return string
-     *
-     * */
-    private function cryptId() : string 
-    {
-        $id =  password_hash(md5(time()), PASSWORD_DEFAULT);
-        return substr($id, 8, 50); ;
-    }
   
 
 }

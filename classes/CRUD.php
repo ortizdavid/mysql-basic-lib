@@ -29,6 +29,7 @@ interface CRUD
     
     public function deleteOnly(string $campo, $valor) : bool; 
     
+
     public function deleteMany(string $campo, array $valores) : bool; 
     
     
@@ -89,7 +90,7 @@ interface CRUD
     public function limit(int $inicio, int $fim) : array;
     
     
-    public function orderBy(string $campo, string $ordem) : array;
+    public function orderBy(string $campo, string $ordem='ASC') : array;
     
     
     public function all(array $condicoes=null, string $campoOrdem=null, string $ordem=null, int $inicio=null, int $fim=null) : array;

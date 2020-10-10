@@ -12,16 +12,16 @@ namespace classes;
 interface Calculation
 {
     
-    public function increase(string $campo, int $id, $valor) : bool;
+    public function increase(string $campo, $valor, int $id) : bool;
     
 
-    public function decrease(string $campo, int $id, $valor) : bool;
+    public function decrease(string $campo, $valor, int $id) : bool;
     
     
-    public function multiply(string $campo, int $id, $valor) : bool;
+    public function multiply(string $campo, $valor, int $id) : bool;
     
     
-    public function divide(string $campo, int $id, $valor) : bool;
+    public function divide(string $campo, $valor, int $id) : bool;
     
     
     public function count() : int;

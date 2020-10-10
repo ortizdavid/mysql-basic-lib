@@ -49,10 +49,10 @@ trait TimePeriod
     /**@author Ortiz David
      * @copyright 2020
      * @name age
-     * @desc Calcula a idade om base na data
+     * @desc Calcula a idade com base na data
      * @param string $dataNasc
      * @return int
-     *
+     * @example: $tb->age('1994-10-22') 
      * */
     public function age(string $dataNasc) : int
     {
@@ -79,7 +79,8 @@ trait TimePeriod
      * @param string $intervalo
      * @param string $tempo
      * @return string
-     *
+     * @example: $tb->subDate('2020-10-22', '3', 'ano') 
+     *      <br> $tb->subDate('2020-10-22', '3', 'ano') 
      * */
     public function subDate(string $data, string $intervalo, string $tempo) : string
     {

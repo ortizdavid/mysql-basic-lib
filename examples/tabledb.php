@@ -148,14 +148,34 @@ $contacto->insert([
     'telefone' => 917003405,
     'email' => 'maria@yahoo.com'
 ]);
-echo "<br>";
 ###########################################################################################
+
+
+
+#####################Obter o primeiro, o médio e o último Registo################################################-
+echo "<h3>Obtendo o Primeiro, Médio e o Último Registo...</h3>";
+
+$obj = $cliente->first();
+echo "Dados Cliente primeiro Cliente:<br>";
+echo "Id: {$obj->id_cliente}<br>Nome: {$obj->nome}<br>Sexo: {$obj->sexo}<br>Data de Nascimento: {$obj->data_nasc}";
+echo "<br><br>";
+
+$obj = $cliente->middle();
+echo "Dados Cliente Cliente do Meio:<br>";
+echo "Id: {$obj->id_cliente}<br>Nome: {$obj->nome}<br>Sexo: {$obj->sexo}<br>Data de Nascimento: {$obj->data_nasc}";
+echo "<br><br>";
+
+$obj = $cliente->last();
+echo "Dados Cliente último Cliente:<br>";
+echo "Id: {$obj->id_cliente}<br>Nome: {$obj->nome}<br>Sexo: {$obj->sexo}<br>Data de Nascimento: {$obj->data_nasc}";
+echo "<hr><br>";
+########################################################################################-
 
 
 
 
 #####################Obter um Registo################################################-
-echo "<h3>Obter Registos</h3>";
+echo "<h3>Obtendo Registos pelo Nome e pelo Id...</h3>";
 $id = 5;
 $obj = $cliente->find($id);
 echo "Dados Cliente com Id: {$id}<br>";
@@ -172,7 +192,7 @@ echo "<hr><br>";
 
 
 #####################Buscar Registos ################################################-
-echo "<h3>Busca de Registos</h3>";
+echo "<h3>Buscando Registos por Nome e por Sexo...</h3>";
 $param = 'm';
 $busca = $cliente->search(['nome'=>$param]);
 $total = count($busca);
@@ -195,7 +215,7 @@ echo "<hr><br>";
 
 
 #####################Eliminar um Registo################################################-
-echo "<h3>Eliminação de Registos</h3>";
+echo "<h3>Eliminando Registos por Id e por Nome...</h3>";
 $id = 2;
 $cliente->delete($id);
 echo "Foi Eliminado o Cliente com Id: {$id}";
@@ -215,7 +235,7 @@ echo "<hr><br>";
 
 
 #####################Actualizar um Registo################################################-
-echo "<h3>Actualização de Registos</h3>";
+echo "<h3>Actualizando Registos pelo nome e Pelo Id...</h3>";
 $id = 1;
 $cliente->update(['data_nasc'=>'2002-04-04'], $id);
 echo "Foi Actualizada a Data do Cliente com Id: {$id}<br>";
@@ -233,11 +253,11 @@ echo "<hr><br>";
 
 
 #####################Funções Maior e Menor################################################-
-echo "<h3>Máximo e Mínimo</h3>";
+echo "<h3>Otendo o Maior, Menor, Média e Soma...</h3>";
 echo "Maior Id: {$cliente->max('id_cliente')}<br>";
 echo "Menor Id: {$cliente->min('id_cliente')}<br>";
-echo "Soma dos Ids: {$cliente->sum('id_cliente')}<br>";
-echo "Média dos Ids: {$cliente->avg('id_cliente')}<br>";
+echo "Soma de todos os Ids: {$cliente->sum('id_cliente')}<br>";
+echo "Média de todos os Ids: {$cliente->avg('id_cliente')}<br>";
 echo "<hr><br>";
 ########################################################################################-
 
@@ -248,7 +268,7 @@ $data1 = "1993-10-08";
 $data2 = "2001-11-18";
 $hora1 = date('H:i:s');
 $hora2 = '05:00:00';
-echo "<h3>Manipulação de Datas</h3>";
+echo "<h3>Manipulando Datas...</h3>";
 echo "Da Data '{$data1}' Passaram-se a '{$cliente->age($data1)}' anos<br>";
 echo "Subtraindo 15 dias na data '{$data1}' ----------- '{$cliente->subDate($data1, '15', 'dia')}'<br>";
 echo "Adicionando 2 anos na data '{$data1}' ----------- '{$cliente->addDate($data1, '2', 'ano')}'<br>";
@@ -267,8 +287,7 @@ echo "<hr><br>";
 
 
 #####################Listagem dos Registos ################################################-
-echo "<h3>Listagem de Clientes<br>Total: {$cliente->count()}</h3>";
-echo "";
+echo "<h3>Listando todos os Clientes <br>Total: {$cliente->count()}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -295,7 +314,7 @@ echo "<hr><br>";
 
 
 #####################Listagem dos Registos ordenados por Nome ################################################-
-echo "<h3>Listagem de Clientes Ordenados por Nome <br>Total: {$cliente->count()}</h3>";
+echo "<h3>Listando os Clientes Ordenados por Nome... <br>Total: {$cliente->count()}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -305,7 +324,7 @@ echo "      <th>Data de Nascimento</th>";
 echo "      <th>Idade</th>";
 echo "      <th>Altura</th>";
 echo "  </tr>";
-foreach ($cliente->orderBy('nome', 'ASC') as $cl) {
+foreach ($cliente->orderBy('nome') as $cl) {
     echo "  <tr>";
     echo "      <td>{$cl->id_cliente}</td>";
     echo "      <td>{$cl->nome}</td>";
@@ -315,14 +334,15 @@ foreach ($cliente->orderBy('nome', 'ASC') as $cl) {
     echo "      <td>{$cl->altura} </td>";
     echo "  </tr>";
 }
-echo "</table><hr><br>";
+echo "</table>";
+echo "<hr><br>";
 ###########################################################################################
 
 
 
 #####################Listagem Apenas os Clientes do Sexo Feminino ################################################-
 $sexo = "Feminino";
-echo "<h3>Listagem de Clientes do Sexo '{$sexo}'<br>Total: {$cliente->countWhere('sexo', $sexo)}</h3>";
+echo "<h3>Listando apenas os de Clientes do Sexo '{$sexo}' ...<br>Total: {$cliente->countWhere('sexo', $sexo)}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -342,14 +362,15 @@ foreach ($cliente->only(['sexo'=> $sexo]) as $cl) {
     echo "      <td>{$cl->altura} </td>";
     echo "  </tr>";
 }
-echo "</table><hr><br>";
+echo "</table>";
+echo "<hr><br>";
 ###########################################################################################
 
 
 
 #####################Listagem de Todos os Clientes Excepto o Carlos Fernando ################################################-
 $nome = "Hermenegildo Calipa";
-echo "<h3>Listagem de Clientes Excepto '{$nome}'<br>Total: {$cliente->countExcept('nome', $nome)}</h3>";
+echo "<h3>Listando todos os Clientes Excepto '{$nome}' ...<br>Total: {$cliente->countExcept('nome', $nome)}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -369,7 +390,8 @@ foreach ($cliente->except(['nome'=>$nome]) as $cl) {
     echo "      <td>{$cl->altura} </td>";
     echo "  </tr>";
 }
-echo "</table><hr>";
+echo "</table>";
+echo "<hr><br>";
 ###########################################################################################
 
 
@@ -377,7 +399,7 @@ echo "</table><hr>";
 #####################Listagem de Todos os Clientes Que têm Altura################################################-
 $lista = $cliente->isNull('altura');
 $total = count($lista);
-echo "<h3>Listagem de Clientes que não têm altura<br>Total: {$total}</h3>";
+echo "<h3>Listagendo os Clientes que não têm altura...<br>Total: {$total}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -397,7 +419,8 @@ foreach ($lista as $cl) {
     echo "      <td>{$cl->altura} </td>";
     echo "  </tr>";
 }
-echo "</table><hr>";
+echo "</table>";
+echo "<hr><br>";
 ###########################################################################################
 
 
@@ -465,7 +488,7 @@ $data1 = '1950-01-01';
 $data2 = '1986-12-31';
 $lista = $cliente->notBetween('data_nasc', $data1, $data2);
 $total = count($lista);
-echo "<h3>Listagem de Clientes que não nasceram entre '{$data1}' e '{$data2}'<br>Total: {$total}</h3>";
+echo "<h3>Listando os Clientes que não nasceram entre '{$data1}' e '{$data2}' ...<br>Total: {$total}</h3>";
 echo "<table border='1'>";
 echo "  <tr>";
 echo "      <th>Id</th>";
@@ -485,7 +508,6 @@ foreach ($lista as $cl) {
     echo "      <td>{$cl->altura} </td>";
     echo "  </tr>";
 }
-echo "</table><hr>";
+echo "</table>";
+echo "<hr></br>";
 ###########################################################################################
-
-
