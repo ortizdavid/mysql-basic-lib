@@ -75,12 +75,13 @@ trait TimePeriod
      * @copyright 2020
      * @name subDate
      * @desc Subtrai um intervalo de tempo na data
+     * <br> Pode subtrair: semana, dias, anos, etc
      * @param string $data
      * @param string $intervalo
      * @param string $tempo
      * @return string
      * @example: $tb->subDate('2020-10-22', '3', 'ano') 
-     *      <br> $tb->subDate('2020-10-22', '3', 'ano') 
+     *      <br> $tb->subDate('2020-10-22', '5', 'mes') 
      * */
     public function subDate(string $data, string $intervalo, string $tempo) : string
     {
