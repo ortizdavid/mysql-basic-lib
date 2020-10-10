@@ -11,13 +11,15 @@ require_once 'Calculation.php';
 require_once 'TimePeriod.php';
 
 /**
- *
- * @author Ortiz David
- * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
+ * @author Ortiz de Arcanjo António David
+ * <br>Emails: ortizaad1994@gmail.com  / ortizdavid-17@gmal.com
+ * <br>Telefones: +244 936 166 699 / +244 916 975 061
+ * <br>Endereço: Luanda - Angola,  Rua Guliherme Pereira Inglês - Largo das Ingombotas
+ * @copyright 2020 
+ * @version 1.0.0  
  * @name TableDB
  * @desc Classe com as Operações da base de dados<br>Operações CRUD, funções de agregação e outras
  * <br> Permite Inserir, Actalizar, Eliminar, Listar, Ordenar e outras manipulações de registos
- * @copyright 2020   
  */
 abstract class TableDB implements CRUD, Calculation
 {
@@ -349,7 +351,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param int $id
      * @param mixed $valor
      * @return bool
-     *  @example: $tb->deleteOnly('nome', 'Maria');
+     * @example: $tb->deleteOnly('nome', 'Maria');
      * */
     public function deleteOnly(string $campo, $valor) : bool
     {
@@ -381,7 +383,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $valores
      * @return bool
      * @example: $tb->deleteMany('id', [1, 3, 5]);
-     *      <br> $tb->deleteMany('nome', ['Maria', 'Paulo']);
+     * @example: $tb->deleteMany('nome', ['Maria', 'Paulo']);
      * */
     public function deleteMany(string $campo, array $valores) : bool
     {
@@ -441,7 +443,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $opRelacional
      * @return array
      * @example: $tb->search(['sexo'=>'Feminino']);
-     *      <br> $tb->search(['idade'=>27, 'sexo'=>'Masculino'], 'AND', '=');
+     * @example: $tb->search(['idade'=>27, 'sexo'=>'Masculino'], 'AND', '=');
      * */
     public function search(array $condicoes, string $opLogico='OR', string $opRelacional='LIKE') : array
     {
@@ -628,7 +630,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return array
      * @example: $tb->values('nome');
-     *      <br> $tb->values('idade', ['sexo'=>'Masculino']);
+     * @example: $tb->values('idade', ['sexo'=>'Masculino']);
      * */
     public function values(string $campo, array $condicoes=null) : array
     {
@@ -669,7 +671,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param mixed $fim
      * @return array
      * @example: $tb->between('idade', 20, 43);
-     *      <br> $tb->between('data', '2019-01-01', '2020-12-31');
+     * @example: $tb->between('data', '2019-01-01', '2020-12-31');
      * */
     public function between(string $campo, $inicio, $fim) : array
     {
@@ -700,7 +702,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param mixed $fim
      * @return array
      * @example: $tb->notBetween('idade', 20, 43);
-     *      <br> $tb->notBetween('data', '2019-01-01', '2020-12-31');
+     * @example: $tb->notBetween('data', '2019-01-01', '2020-12-31');
      * */
     public function notBetween(string $campo, $inicio, $fim) : array
     {
@@ -731,7 +733,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $valores
      * @return array
      * @example: $tb->in('idade', [20, 39, 12, 43]);
-     *      <br> $tb->in('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
+     * @example: $tb->in('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
     public function in(string $campo, array $valores) : array
     {
@@ -766,7 +768,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param string $campo
      * @return array
      * @example: $tb->isNull('altura');
-     *      <br> $tb->isNull('data');
+     * @example: $tb->isNull('data');
      * */
     public function isNull(string $campo) : array
     {
@@ -796,7 +798,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $valores
      * @return array
      * @example: $tb->isNotNull('altura');
-     *      <br> $tb->isNotNull('data');
+     * @example: $tb->isNotNull('data');
      * */
     public function isNotNull(string $campo) : array
     {
@@ -826,7 +828,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $valores
      * @return array
      *@example: $tb->notIn('idade', [20, 39, 12, 43]);
-     *      <br> $tb->notIn('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
+     * @example: $tb->notIn('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
     public function notIn(string $campo, array $valores) : array
     {
@@ -861,7 +863,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return array
      * @example: $tb->except(['sexo'=>'Feminino', 'idade'=>30]);
-     *      <br> $tb->except(['nome'=>'José']);
+     * @example: $tb->except(['nome'=>'José']);
      * */
     public function except(array $condicoes) : array
     {
@@ -894,7 +896,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return array
      *@example: $tb->only(['data'=>'2020-06-08', 'tipo'=>'Normal']);
-     *      <br> $tb->only(['sexo'=>'Masculino']);
+     *@example: $tb->only(['sexo'=>'Masculino']);
      * */
     public function only(array $condicoes) : array
     {
@@ -1014,7 +1016,7 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna um Todos os registos agrupados pelo campo
      * @param string campo
      * @return array
-     *  @example: $tb->groupBy('sexo');
+     * @example: $tb->groupBy('sexo');
      * */
     public function groupBy(string $campo) : array
     {
@@ -1045,7 +1047,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return array
      * @example: $tb->all();
-     *      <br> $tb->all(['data'=> '2020-10-10', 'sexo'=>'Feminino'], 'nome', 'ASC', 10, 50);
+     * @example: $tb->all(['data'=> '2020-10-10', 'sexo'=>'Feminino'], 'nome', 'ASC', 10, 50);
      * */
     public function all(array $condicoes=null, string $campoOrdem=null, string $ordem=null, int $inicio=null, int $fim=null) : array
     {
@@ -1086,8 +1088,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param mixed $valor
      * @param int id
      * @return bool
-     *  @example: $tb->increase('qtd_stock', 2, 43);
-     *       <br> $tb->increase('saldo_cliente', 1000, 2)
+     * @example: $tb->increase('qtd_stock', 2, 43);
+     * @example: $tb->increase('saldo_cliente', 1000, 2)
      * */
     public function increase(string $campo, $valor, int $id) : bool
     {
@@ -1124,8 +1126,8 @@ abstract class TableDB implements CRUD, Calculation
      * @param mixed $valor
      * @param int id
      * @return bool
-     *  @example: $tb->decrease('qtd_stock', 2, 43);
-     *       <br> $tb->deccrease('saldo_cliente', 1000, 2)
+     * @example: $tb->decrease('qtd_stock', 2, 43);
+     * @example: $tb->deccrease('saldo_cliente', 1000, 2)
      * */
     public function decrease(string $campo, $valor, int $id) : bool
     {
@@ -1318,7 +1320,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return mixed
      * @example:  $tb->max('salario', ['sexo'=>'Feminino'])
-     *       <br> $tb->max('altura')
+     * @example: $tb->max('altura')
      * */
     public function max(string $campo, array $condicoes=null) 
     {
@@ -1355,7 +1357,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return mixed
      * @example:  $tb->min('salario', ['sexo'=>'Feminino'])
-     *       <br> $tb->min('altura')
+     * @example: $tb->min('altura')
      * */
     public function min(string $campo, array $condicoes=null)
     {
@@ -1392,7 +1394,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return float
      * @example:  $tb->sum('salario', ['pais'=>'Angola'])
-     *       <br> $tb->sum('salario')
+     * @example: $tb->sum('salario')
      * */
     public function sum(string $campo, array $condicoes=null) : float
     {
@@ -1429,7 +1431,7 @@ abstract class TableDB implements CRUD, Calculation
      * @param array $condicoes
      * @return float
      *@example:  $tb->media('altura', ['sexo'=>'Feminino'])
-     *       <br> $tb->media('altura')
+     * @example: $tb->media('altura')
      * */
     public function avg(string $campo, array $condicoes=null) : float
     {

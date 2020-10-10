@@ -8,12 +8,14 @@ use PDOException;
 require_once 'Connection.php';
 
 /**
- *
- * @author Ortiz David
- * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
+ * @author Ortiz de Arcanjo António David
+ * <br>Emails: ortizaad1994@gmail.com  / ortizdavid-17@gmal.com
+ * <br>Telefones: +244 936 166 699 / +244 916 975 061
+ * <br>Endereço: Luanda - Angola,  Rua Guliherme Pereira Inglês - Largo das Ingombotas
+ * @copyright 2020 
+ * @version 1.0.0
  * @name TimePeriod
  * @desc Trait reponsável pela manipulação de datas 
- * @copyright 2020
  */
 trait TimePeriod
 {
@@ -25,7 +27,6 @@ trait TimePeriod
      * @desc Converte o tempo em numa palavra reservada do MySQL
      * @param string $tempo
      * @return string
-     *
      * */
     private function mysqlPeriod(string $tempo) : string
     {
@@ -74,14 +75,14 @@ trait TimePeriod
     /**@author Ortiz David
      * @copyright 2020
      * @name subDate
-     * @desc Subtrai um intervalo de tempo na data
+     * @desc Subtrai um intervalo de tempo na data e retorna o resultado
      * <br> Pode subtrair: semana, dias, anos, etc
      * @param string $data
      * @param string $intervalo
      * @param string $tempo
      * @return string
      * @example: $tb->subDate('2020-10-22', '3', 'ano') 
-     *      <br> $tb->subDate('2020-10-22', '5', 'mes') 
+     * @example: $tb->subDate('2020-10-22', '5', 'mes') 
      * */
     public function subDate(string $data, string $intervalo, string $tempo) : string
     {
@@ -104,12 +105,14 @@ trait TimePeriod
     /**@author Ortiz David
      * @copyright 2020
      * @name addDate
-     * @desc Adiciona um intervalo de tempo na data
+     * @desc Adiciona um intervalo de tempo na data e retorna o resultado
+     * <br> Pode adicionar: semana, dias, anos, etc
      * @param string $data
      * @param string $intervalo
      * @param string $tempo
      * @return string
-     *
+     * @example: $tb->addDate('2020-10-22', '15', 'dia') 
+     * @example: $tb->addDate('2013-10-22', '8', 'ano')
      * */
     public function addDate(string $data, string $intervalo, string $tempo) : string
     {
@@ -136,7 +139,8 @@ trait TimePeriod
      * @param string $data1
      * @param string $data2
      * @return string
-     *
+     * @example: $tb->diffDate('2000-01-25', '2020-10-10') 
+     * @example: $tb->diffDate('2010-10-22 10:00:09', '2012-12-12') 
      * */
     public function diffDate(string $data1, string $data2) : string
     {
@@ -161,11 +165,13 @@ trait TimePeriod
      * @copyright 2020
      * @name extract
      * @desc Extrai uma unidade de tempo na data
-     * <br> Ano, dia, més, etc
+     * <br> Pode extrair Ano, dia, més, etc
      * @param string $data
      * @param string $tempo
      * @return string
-     *
+     * @example: $tb->extract('2000-01-25', 'dia')
+     * @example: $tb->extract('2000-01-25', 'ano')
+     * @example: $tb->extract('2000-01-25 09:12:00', 'minuto')
      * */
     public function extract(string $data, string $tempo) : string
     {
@@ -192,7 +198,9 @@ trait TimePeriod
      * <br> Apenas retorna Ano, dia da Semana, més do Ano, último dia do més, etc
      * @param string $data
      * @return string
-     *
+     * @example: $tb->convertPeriod('2020-01-10', 'dia')
+     * @example: $tb->convertPeriod('2000-01-25', 'hora')
+     * @example: $tb->convertPeriod('2000-01-25', 'semana')
      * */
     public function convertPeriod(string $data, string $tipo) : string
     {
@@ -234,7 +242,7 @@ trait TimePeriod
      * @param string $hora2
      * @param string $tempo
      * @return string
-     *
+     * @example: $tb->addTime('10:00:09', '08:45:23') 
      * */
     public function addTime(string $hora1, string $hora2) : string
     {
@@ -261,7 +269,8 @@ trait TimePeriod
      * @param string $data1
      * @param string $data2
      * @return string
-     *
+     * @example: $tb->timeDiff('10:00:09', '08:45:23') 
+     * @example: $tb->timeDiff('1999-09-02', '2015-12-23') 
      * */
     public function timeDiff(string $data1, string $data2) : string
     {
@@ -288,7 +297,9 @@ trait TimePeriod
      * @desc Retorna dia da semana, dia do ano ou  dia do més
      * @param string $tipo
      * @return string
-     *
+     * @example: $tb->dayOf('2019-08-12', 'nome_dia')
+     * @example: $tb->dayOf('2019-08-12', 'dia_mes') 
+     * @example: $tb->dayOf('2019-08-12', 'dia_ano')
      * */
     public function dayOf(string $data, string $tipo) : string
     {
@@ -322,7 +333,8 @@ trait TimePeriod
      * @param string $data 
      * @param string $tipo
      * @return string
-     *
+     * @example: $tb->dateTo('2013-05-02', 'dia')
+     * @example: $tb->dateTo('2013-05-02', 'segundo')
      * */
     public function dateTo(string $data, string $tipo) 
     {

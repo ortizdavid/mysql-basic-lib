@@ -2,12 +2,13 @@
 namespace classes;
 
 /**
- *
- * @author Ortiz David
- * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
- * @name Calculation
+* @author Ortiz de Arcanjo António David
+ * <br>Emails: ortizaad1994@gmail.com  / ortizdavid-17@gmal.com
+ * <br>Telefones: +244 936 166 699 / +244 916 975 061
+ * <br>Endereço: Luanda - Angola,  Rua Guliherme Pereira Inglês - Largo das Ingombotas
+ * @copyright 2020 
+ * @version 1.0.0
  * @desc Interface com os métodos básicos de cálculos na tabela
- * @copyright 2020
  */
 interface Calculation
 {

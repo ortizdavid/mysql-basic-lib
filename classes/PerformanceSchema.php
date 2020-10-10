@@ -12,12 +12,14 @@ require_once 'Connection.php';
 
 
 /**
- *
- * @author Ortiz David
- * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
+ * @author Ortiz de Arcanjo António David
+ * <br>Emails: ortizaad1994@gmail.com  / ortizdavid-17@gmal.com
+ * <br>Telefones: +244 936 166 699 / +244 916 975 061
+ * <br>Endereço: Luanda - Angola,  Rua Guliherme Pereira Inglês - Largo das Ingombotas
+ * @copyright 2020 
+ * @version 1.0.0
  * @name InformationSchema
  * @desc Obtém as informações da Base de Dados PERFORMANCE_SCHEMA
- * @copyright 2020
  */
 class PerformanceSchema
 {

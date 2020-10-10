@@ -7,12 +7,15 @@ use PDOException;
 require_once 'Config.php';
 
 /**
- * @author Ortiz David
- * <br>Email: ortizaad1994@gmail.com <br>Tel: +244936166699
+* @author Ortiz de Arcanjo António David
+ * <br>Emails: ortizaad1994@gmail.com  / ortizdavid-17@gmal.com
+ * <br>Telefones: +244 936 166 699 / +244 916 975 061
+ * <br>Endereço: Luanda - Angola,  Rua Guliherme Pereira Inglês - Largo das Ingombotas
+ * @copyright 2020 
+ * @version 1.0.0
  * @name ExecQuery
  * @desc Classe que permite Executar Querys directamente
- * <br> Para o caso de querermos criar e executar uma query sem usar a classe OperacaoBD
- * @copyright 2020      
+ * <br> Para o caso de querermos criar e executar uma query sem usar a classe OperacaoBD    
  */
 class ExecQuery
 {
