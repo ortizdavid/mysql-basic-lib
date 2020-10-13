@@ -57,8 +57,8 @@ class ExecQuery
     private function connect() : PDO
     {
         $dsn = "{$this->driver}:host={$this->host};dbname={$this->dbName};";
-        $conexao = new PDO($dsn, $this->user, $this->password);
-        return $conexao;
+        $con = new PDO($dsn, $this->user, $this->password);
+        return $con;
     }
 
     
@@ -100,12 +100,12 @@ class ExecQuery
             $pdo = $this->connect();
             $stmt = $pdo->prepare($query);
             $stmt->execute();
-            $elementos = array();
-            $resultado = $stmt->fetchAll(PDO::FETCH_OBJ);
-            foreach ($resultado as $elemento){
-                $elementos[] = $elemento->valor;
+            $elements = array();
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            foreach ($result as $element){
+                $elements[] = $element->val;
             }
-            return $elementos;
+            return $elements;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -149,7 +149,7 @@ class ExecQuery
             $stmt = $pdo->prepare($query);
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_OBJ);
-            return $res->resultado;
+            return $res->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -192,9 +192,9 @@ class ExecQuery
             $pdo = $this->connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($query);
-            $retorno = $stmt->execute();
+            $result = $stmt->execute();
             $pdo->commit();
-            return $retorno;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -216,9 +216,9 @@ class ExecQuery
             $pdo = $this->connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($query);
-            $retorno = $stmt->execute();
+            $result = $stmt->execute();
             $pdo->commit();
-            return $retorno;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -240,9 +240,9 @@ class ExecQuery
             $pdo = $this->connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($query);
-            $retorno = $stmt->execute();
+            $result = $stmt->execute();
             $pdo->commit();
-            return $retorno;
+            return $result;
         }catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();

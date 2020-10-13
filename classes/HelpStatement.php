@@ -27,10 +27,10 @@ trait HelpStatement
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $retorno = $stmt->execute();
+            $result = $stmt->execute();
             $pdo->commit();
             Connection::disconnect();
-            return $retorno;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -45,10 +45,10 @@ trait HelpStatement
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
-            $retorno = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $pdo->commit();
             Connection::disconnect();
-            return $retorno;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -63,10 +63,10 @@ trait HelpStatement
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
-            $retorno = $stmt->fetch(PDO::FETCH_OBJ);
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
             $pdo->commit();
             Connection::disconnect();
-            return $retorno;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
