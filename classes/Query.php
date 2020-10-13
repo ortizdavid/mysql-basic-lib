@@ -71,16 +71,16 @@ class Query
      * @copyright 2020
      * @desc Cria o comando select, com os campos desejados, separados por vírgulas
      * @name select
-     * @param string $campos
+     * @param string $fields
      * @return Query
      * **/
-    public function select(string $campos=null) : Query
+    public function select(string $fields=null) : Query
     {
         $strSelect = "";
-        if($campos == null)
+        if($fields == null)
             $strSelect = " * ";
         else 
-            $strSelect .= $campos;
+            $strSelect .= $fields;
         $this->_select .= " {$strSelect} ";  
         $this->queryResult .= $this->_select;
         return $this;
@@ -92,15 +92,15 @@ class Query
     * @copyright 2020
     * @desc Cria o delete na tabela e as condições
     * @name delete
-    * @param string $tabela
+    * @param string $table
     * @return Query
     * **/
-    public function delete(string $tabela) : Query
+    public function delete(string $table) : Query
     {
         if(count($this->_delete) > 0)
             $this->_delete[] = " ";
         else{
-            $this->_delete[] = " DELETE FROM {$tabela} ";
+            $this->_delete[] = " DELETE FROM {$table} ";
             $this->queryResult .= $this->_delete[0];
         }
         return $this;
@@ -112,28 +112,28 @@ class Query
      * @copyright 2020
      * @desc Cria a query insert na tabela e as condições
      * @name insert
-     * @param string $tabela
-     * @param array $campos
+     * @param string $table
+     * @param array $fields
      * @return Query
      * **/
-    public function insert(string $tabela, array $campos) : Query
+    public function insert(string $table, array $fields) : Query
     {
-        $this->_insert .= " INTO {$tabela} ( ";
+        $this->_insert .= " INTO {$table} ( ";
         $cont = 0;
         $cont2 = 0;
         $strInsert = " ";
         $strValues = " ";
-        foreach ($campos as $campo => $valor){
+        foreach ($fields as $field => $value){
             $cont++;
-            $strInsert .= ($cont == count($campos)) ? " {$campo} " : " {$campo}, ";
+            $strInsert .= ($cont == count($fields)) ? " {$field} " : " {$field}, ";
         }
         $this->_insert .= " {$strInsert} ) ";
         $this->_insert .= " VALUES ( ";
-        foreach ($campos as $campo => $valor){
+        foreach ($fields as $field => $value){
             $cont2++;
-            $valor = $this->filter($valor);
-            $novoVal = (is_string($valor)) ? " '{$valor}' " : $valor;
-            $strValues .= ($cont2 == count($campos)) ? " {$novoVal} " : " {$novoVal}, ";
+            $value = $this->filter($value);
+            $novoVal = (is_string($value)) ? " '{$value}' " : $value;
+            $strValues .= ($cont2 == count($fields)) ? " {$novoVal} " : " {$novoVal}, ";
         }
         $this->_insert .= " {$strValues} ); ";
         $this->queryResult .= $this->_insert;
@@ -146,29 +146,29 @@ class Query
      * @copyright 2020
      * @desc Cria a query update na tabela e as condições
      * @name update
-     * @param string $tabela
-     * @param array $campos
-     * @param array $condicoes
+     * @param string $table
+     * @param array $fields
+     * @param array $conditions
      * @return Query
      * **/
-    public function update(string $tabela, array $campos, array $condicoes) : Query
+    public function update(string $table, array $fields, array $conditions) : Query
     {
-        $this->_update .= " {$tabela} SET ";
+        $this->_update .= " {$table} SET ";
         $cont = 0;
         $cont2 = 0;
         $strSet = " ";
         $strCond = " ";
-        foreach ($campos as $campo => $valor){
+        foreach ($fields as $field => $value){
             $cont++;
-            $valor = $this->filter($valor);
-            $novoValor = (is_string($valor)) ? " '{$valor}' " : $valor;
-            $strSet .= ($cont == count($campos)) ? " {$campo} = {$novoValor} " : " {$campo} = {$novoValor}, ";
+            $value = $this->filter($value);
+            $newValue = (is_string($value)) ? " '{$value}' " : $value;
+            $strSet .= ($cont == count($fields)) ? " {$field} = {$newValue} " : " {$field} = {$newValue}, ";
         }
-        foreach ($condicoes as $chave => $val){
+        foreach ($conditions as $chave => $val){
             $cont2++;
             $val = $this->filter($val);
             $novoVal = (is_string($val)) ? " '{$val}' " : $val;
-            $strCond .= ($cont2 == count($condicoes)) ? " {$chave} = {$novoVal} " : " {$chave} = {$novoVal} AND ";
+            $strCond .= ($cont2 == count($conditions)) ? " {$chave} = {$novoVal} " : " {$chave} = {$novoVal} AND ";
         }
         $this->_update .= " {$strSet} WHERE {$strCond} ";
         $this->queryResult .= $this->_update;
@@ -181,15 +181,15 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando FROM e a tabela
      * @name from
-     * @param string $tabela
+     * @param string $table
      * @return Query
      * **/
-    public function from(string $tabela) : Query
+    public function from(string $table) : Query
     {
        if(count($this->_from) > 0)
             $this->_from[] = " ";
         else {
-            $this->_from[] = " FROM {$tabela} ";
+            $this->_from[] = " FROM {$table} ";
             $this->queryResult .= $this->_from[0];
         }
        return $this;
@@ -201,14 +201,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando JOIN ON e a tabela 
      * @name join
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function join(string $tabela, string $on=null) : Query
+    public function join(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -218,14 +218,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando LEFT JOIN ON e a tabela
      * @name leftJoin
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function leftJoin(string $tabela, string $on=null) : Query
+    public function leftJoin(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " LEFT JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " LEFT JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -235,14 +235,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando RIGHT JOIN ON e a tabela
      * @name rightJoin
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function rightJoin(string $tabela, string $on=null) : Query
+    public function rightJoin(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " RIGHT JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " RIGHT JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -252,14 +252,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando FULL JOIN ON e a tabela
      * @name fullJoin
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function fullJoin(string $tabela, string $on=null) : Query
+    public function fullJoin(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " FULL JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " FULL JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -269,14 +269,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando FULL CROSS ON e a tabela
      * @name crossJoin
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function crossJoin(string $tabela, string $on=null) : Query
+    public function crossJoin(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " CROSS JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " CROSS JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -286,14 +286,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando NATURAL CROSS ON e a tabela
      * @name naturalJoin
-     * @param string $tabela
+     * @param string $table
      * @param string $on
      * @return Query
      * **/
-    public function naturalJoin(string $tabela, string $on=null) : Query
+    public function naturalJoin(string $table, string $on=null) : Query
     {
         $strOn = ($on==null) ? "" : " ON ({$on}) " ;
-        $this->queryResult .= " NATURAL JOIN {$tabela} {$strOn} ";
+        $this->queryResult .= " NATURAL JOIN {$table} {$strOn} ";
         return $this;
     }
     
@@ -303,17 +303,17 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando WHERE e a condição
      * @name where
-     * @param string $tabela
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $table
+     * @param string $operator
+     * @param mixed $value
      * @return Query
      * **/
-    public function where(string $campo, string $operador, $valor) : Query
+    public function where(string $field, string $operator, $value) : Query
     {
         if(count($this->_where) > 0)
             $this->_where[] = " ";  
         else {
-            $condicao = $this->getCondition($campo, $operador, $valor);
+            $condicao = $this->getCondition($field, $operator, $value);
             $this->_where[] = " WHERE {$condicao} "; 
             $this->queryResult .= $this->_where[0];
         }
@@ -325,24 +325,24 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando WHERE e o comando IN
      * @name whereIn
-     * @param string $tabela
-     * @param array $valores
+     * @param string $table
+     * @param array $values
      * @return Query
      * **/
-    public function whereIn(string $campo, array $valores) : Query
+    public function whereIn(string $field, array $values) : Query
     {
         if(count($this->_in) > 0)
             $this->_in[] = " ";
         else {
             $cont = 0;
             $strVal = " ";
-            foreach ($valores as $valor){
+            foreach ($values as $value){
                 $cont++;
-                $valor = $this->filter($valor);
-                $novoValor = (is_string($valor)) ? " '{$valor}' " : $valor;
-                $strVal .= ($cont == count($valores)) ? " {$novoValor} " : " {$novoValor}, ";
+                $value = $this->filter($value);
+                $newValue = (is_string($value)) ? " '{$value}' " : $value;
+                $strVal .= ($cont == count($values)) ? " {$newValue} " : " {$newValue}, ";
             }
-            $this->_in[] = " WHERE {$campo} IN ({$strVal}) ";
+            $this->_in[] = " WHERE {$field} IN ({$strVal}) ";
             $this->queryResult .= $this->_in[0];
         }
         return $this;
@@ -354,24 +354,24 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando WHERE e o comando NOT IN
      * @name whereNoiIn
-     * @param string $tabela
-     * @param array $valores
+     * @param string $table
+     * @param array $values
      * @return Query
      * **/
-    public function whereNotIn(string $campo, array $valores) : Query
+    public function whereNotIn(string $field, array $values) : Query
     {
         if(count($this->_notIn) > 0)
             $this->_notIn[] = " ";
             else {
                 $cont = 0;
                 $strVal = " ";
-            foreach ($valores as $valor){
+            foreach ($values as $value){
                 $cont++;
-                $valor = $this->filter($valor);
-                $novoValor = (is_string($valor)) ? " '{$valor}' " : $valor;
-                $strVal .= ($cont == count($valores)) ? " {$novoValor} " : " {$novoValor}, ";
+                $value = $this->filter($value);
+                $newValue = (is_string($value)) ? " '{$value}' " : $value;
+                $strVal .= ($cont == count($values)) ? " {$newValue} " : " {$newValue}, ";
             }
-            $this->_notIn[] = " WHERE {$campo} NOT IN ({$strVal}) ";
+            $this->_notIn[] = " WHERE {$field} NOT IN ({$strVal}) ";
             $this->queryResult .= $this->_notIn[0];
         }
         return $this;
@@ -383,14 +383,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando IS NULL
      * @name _null
-     * @param string $tabela
-     * @param array $valores
+     * @param string $table
+     * @param array $values
      * @return Query
      * **/
-    public function isNull(string $operador='AND', string $campo) : Query
+    public function isNull(string $operator='AND', string $field) : Query
     {
-        $strOp = (in_array($operador, ['AND', 'OR'])) ? $operador : ' ___ERROR___ ';
-        $this->_notNull .= " {$strOp} {$campo} IS NULL ";
+        $strOp = (in_array($operator, ['AND', 'OR'])) ? $operator : ' ___ERROR___ ';
+        $this->_notNull .= " {$strOp} {$field} IS NULL ";
         $this->queryResult .= $this->_notNull;
         return $this;
     }
@@ -400,14 +400,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando IS NOT NULL
      * @name notNull
-     * @param string $tabela
-     * @param array $valores
+     * @param string $table
+     * @param array $values
      * @return Query
      * **/
-    public function notNull(string $operador='AND', string $campo) : Query
+    public function notNull(string $operator='AND', string $field) : Query
     {
-        $strOp = (in_array($operador, ['AND', 'OR'])) ? $operador : ' ___ERROR___ ';
-        $this->_nulls .= " {$strOp} {$campo} IS NOT NULL ";
+        $strOp = (in_array($operator, ['AND', 'OR'])) ? $operator : ' ___ERROR___ ';
+        $this->_nulls .= " {$strOp} {$field} IS NOT NULL ";
         $this->queryResult .= $this->_nulls;
         return $this;
     }
@@ -418,16 +418,16 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando BETWEEN
      * @name between
-     * @param string $operador
-     * @param string $campo
-     * @param string $inicio
-     * @param string $fim
+     * @param string $operator
+     * @param string $field
+     * @param string $start
+     * @param string $end
      * @return Query
      * **/
-    public function between(string $operador='AND', string $campo,  $inicio, $fim) : Query
+    public function between(string $operator='AND', string $field,  $start, $end) : Query
     {
-        $strOp = (in_array($operador, ['AND', 'OR'])) ? $operador : ' ___ERROR___ ';
-        $this->_nulls .= " {$strOp} {$campo} BETWEEN {$inicio} AND {$fim} ";
+        $strOp = (in_array($operator, ['AND', 'OR'])) ? $operator : ' ___ERROR___ ';
+        $this->_nulls .= " {$strOp} {$field} BETWEEN {$start} AND {$end} ";
         $this->queryResult .= $this->_nulls;
         return $this;
     }
@@ -437,16 +437,16 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando NOT BETWEEN
      * @name notBetween
-     * @param string $operador
-     * @param string $campo
-     * @param string $inicio
-     * @param string $fim
+     * @param string $operator
+     * @param string $field
+     * @param string $start
+     * @param string $end
      * @return Query
      * **/
-    public function notBetween(string $operador='AND', string $campo,  $inicio, $fim) : Query
+    public function notBetween(string $operator='AND', string $field,  $start, $end) : Query
     {
-        $strOp = (in_array($operador, ['AND', 'OR'])) ? $operador : ' ___ERROR___ ';
-        $this->_nulls .= " {$strOp} {$campo} NOT BETWEEN {$inicio} AND {$fim} ";
+        $strOp = (in_array($operator, ['AND', 'OR'])) ? $operator : ' ___ERROR___ ';
+        $this->_nulls .= " {$strOp} {$field} NOT BETWEEN {$start} AND {$end} ";
         $this->queryResult .= $this->_nulls;
         return $this;
     }
@@ -459,17 +459,17 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando HAVING e a condição
      * @name having
-     * @param string $tabela
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $table
+     * @param string $operator
+     * @param mixed $value
      * @return Query
      * **/
-    public function having(string $campo, string $operador, $valor) : Query
+    public function having(string $field, string $operator, $value) : Query
     {
         if(count($this->_having) > 0)
             $this->_having[] = " ";
         else {
-            $condicao = $this->getCondition($campo, $operador, $valor);
+            $condicao = $this->getCondition($field, $operator, $value);
             $this->_having[] = " HAVING {$condicao} ";
             $this->queryResult .= $this->_having[0];
         }
@@ -482,14 +482,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando AND e a condição
      * @name and
-     * @param string $tabela
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $table
+     * @param string $operator
+     * @param mixed $value
      * @return Query
      * **/
-    public function and(string $campo, string $operador, $valor) : Query
+    public function and(string $field, string $operator, $value) : Query
     {
-        $condicao = $this->getCondition($campo, $operador, $valor);
+        $condicao = $this->getCondition($field, $operator, $value);
         $this->queryResult .= " AND {$condicao} ";
         return $this;
     }
@@ -500,14 +500,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando OR e a condição
      * @name or
-     * @param string $tabela
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $table
+     * @param string $operator
+     * @param mixed $value
      * @return Query
      * **/
-    public function or(string $campo, string $operador, $valor) : Query
+    public function or(string $field, string $operator, $value) : Query
     {
-        $condicao = $this->getCondition($campo, $operador, $valor);
+        $condicao = $this->getCondition($field, $operator, $value);
         $this->queryResult .= " OR {$condicao} ";
         return $this;
     }
@@ -518,14 +518,14 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando NOT e a condição
      * @name not
-     * @param string $tabela
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $table
+     * @param string $operator
+     * @param mixed $value
      * @return Query
      * **/
-    public function not(string $campo, string $operador, $valor) : Query
+    public function not(string $field, string $operator, $value) : Query
     {
-        $condicao = $this->getCondition($campo, $operador, $valor);
+        $condicao = $this->getCondition($field, $operator, $value);
         $this->queryResult .= " NOT ({$condicao}) ";
         return $this;
     }
@@ -536,16 +536,16 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando ORDER BY a ordem ASC ou DESC
      * @name orderBy
-     * @param string $campo
+     * @param string $field
      * @param string $ordem
      * @return Query
      * **/
-    public function orderBy(string $campo, string $ordem) : Query
+    public function orderBy(string $field, string $ordem) : Query
     {
         if(count($this->_order) > 0)
             $this->_order[] = " ";
         else{
-            $this->_order[] = " ORDER BY {$campo} {$ordem} ";
+            $this->_order[] = " ORDER BY {$field} {$ordem} ";
             $this->queryResult .= $this->_order[0];
         }
         return $this;
@@ -557,15 +557,15 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando GROUP BY e o campo
      * @name groupBy
-     * @param string $campo
+     * @param string $field
      * @return Query
      * **/
-    public function groupBy(string $campo) : Query
+    public function groupBy(string $field) : Query
     {
         if(count($this->_group) > 0)
             $this->_group[] = " ";
         else{
-            $this->_group[] = " GROUP BY {$campo} ";
+            $this->_group[] = " GROUP BY {$field} ";
             $this->queryResult .= $this->_order[0];
         }
         return $this;
@@ -577,16 +577,16 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando LIMIT inicio, fim
      * @name limit
-     * @param int $inicio
-     * @param int  $fim
+     * @param int $start
+     * @param int  $end
      * @return Query
      * **/
-    public function limit(int $inicio, int $fim) : Query
+    public function limit(int $start, int $end) : Query
     {
         if(count($this->_limit) > 0)
             $this->_limit[] = " ";
         else{
-            $this->_limit[] = " LIMIT {$inicio}, {$fim}  ";
+            $this->_limit[] = " LIMIT {$start}, {$end}  ";
             $this->queryResult .= $this->_limit[0];
         }
         return $this;
@@ -598,15 +598,15 @@ class Query
      * @copyright 2020
      * @desc Concatena a query actual com o comando CALL e o nome do procedimento
      * @name call
-     * @param string $proc
+     * @param string $procName
      * @return Query
      * **/
-    public function call(string $proc) : Query
+    public function call(string $procName) : Query
     {
         if(count($this->_call) > 0)
             $this->_call[] = " ";
         else{
-            $this->_call[] = " CALL {$proc} ";
+            $this->_call[] = " CALL {$procName} ";
             $this->queryResult .= $this->_call[0];
         }
         return $this;
@@ -686,18 +686,18 @@ class Query
      * @copyright 2020
      * @desc Retorna uma string com a condição e os operadores
      * @name getCondition
-     * @param string $campo
-     * @param string $operador
-     * @param mixed $valor
+     * @param string $field
+     * @param string $operator
+     * @param mixed $value
      * @return string
      * **/
-    private function getCondition(string $campo, string $operador, $valor) 
+    private function getCondition(string $field, string $operator, $value) 
     {
-        $valor = $this->filter($valor);
+        $value = $this->filter($value);
         //$strCond = null;
-        switch($operador){
-            case 'LIKE': $strCond = " {$campo} LIKE '%{$valor}%' "; break;
-            case 'IN': $strCond = " {$campo} IN ({$valor}) ";   break;
+        switch($operator){
+            case 'LIKE': $strCond = " {$field} LIKE '%{$value}%' "; break;
+            case 'IN': $strCond = " {$field} IN ({$value}) ";   break;
             case '=':
             case '<>':
             case '!=':
@@ -705,8 +705,8 @@ class Query
             case '<':
             case '>=':
             case '<=':
-                $novoValor = (is_int($valor)) ? $valor : "'{$valor}'";
-                $strCond = " {$campo} {$operador} {$novoValor} ";
+                $newValue = (is_int($value)) ? $value : "'{$value}'";
+                $strCond = " {$field} {$operator} {$newValue} ";
                 break;
             default: $strCond = " __ERROR__"; break;
         }
@@ -719,20 +719,20 @@ class Query
      * @copyright 2020
      * @desc Filtra o valor de uma variável
      * @name filter
-     * @param mixed $valor
+     * @param mixed $value
      * @return mixed
      * **/
-    private function filter($valor)
+    private function filter($value)
     {
-        if(is_int($valor)) 
-            $filtrado = filter_var($valor, FILTER_SANITIZE_NUMBER_INT);
-        else if(is_float($valor)|| is_double($valor)) 
-            $filtrado = filter_var($valor, FILTER_SANITIZE_NUMBER_FLOAT);
-        else if(is_string($valor))
-            $filtrado = filter_var($valor, FILTER_SANITIZE_STRING);
+        if(is_int($value)) 
+            $cleanValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        else if(is_float($value)|| is_double($value)) 
+            $cleanValue = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT);
+        else if(is_string($value))
+            $cleanValue = filter_var($value, FILTER_SANITIZE_STRING);
         else 
-            $filtrado = filter_var($valor);
-        return $filtrado;
+            $cleanValue = filter_var($value);
+        return $cleanValue;
     }
     
     
@@ -743,25 +743,25 @@ class Query
      * <br> Pode Executar os comandos Insert, Update, Delete e outros
      * <br> Os Tipos de Operações são: delete, update, create, one, all, value, values e exists
      * @name execute
-     * @param string $operacao
+     * @param string $operation
      * @return mixed
      * **/
-    public function execute(string $operacao='')
+    public function execute(string $operation='')
     {
         try {
             $sql = $this->getQuery();
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $operacao = strtolower($operacao);
+            $operation = strtolower($operation);
             
-            switch ($operacao)
+            switch ($operation)
             {
                 case 'insert':
                 case 'create':
                 case 'new':
                 case 'add':
-                    $resultado = $stmt->execute();
+                    $result = $stmt->execute();
                     $this->lastId = $pdo->lastInsertId();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
@@ -770,7 +770,7 @@ class Query
                 case 'edit':
                 case 'delete' :
                 case 'remove':
-                    $resultado = $stmt->execute();
+                    $result = $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
                     break;
@@ -780,40 +780,40 @@ class Query
                     $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
-                    $resultado = $stmt->fetch(PDO::FETCH_OBJ);
+                    $result = $stmt->fetch(PDO::FETCH_OBJ);
                     break;
                 case 'all':
                 case 'findAll':
                     $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
-                    $resultado = $stmt->fetchAll(PDO::FETCH_OBJ);
+                    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
                     break;
                 case 'value':
                 case 'one_value':
                     $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
-                    $objecto = $stmt->fetch(PDO::FETCH_OBJ);
-                    $resultado = $objecto->valor;
+                   $obj = $stmt->fetch(PDO::FETCH_OBJ);
+                    $result =$obj->value;
                     break;
                 case 'values':
                 case 'all_values':
                     $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
-                    $resultado = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    foreach ($resultado as $elemento){
-                        $valores [] = $elemento->valor;
+                    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+                    foreach ($result as $element){
+                        $values [] = $element->value;
                     }
-                    $resultado = $valores;
+                    $result = $values;
                     break;
                 case 'exists':
                 case 'contains':
                     $stmt->execute();
                     $this->numCols = $stmt->columnCount();
                     $this->numRows = $stmt->rowCount();
-                    $resultado = ($stmt->rowCount() > 0);
+                    $result = ($stmt->rowCount() > 0);
                     break;
                 default:
                     return $stmt->execute();
@@ -821,7 +821,7 @@ class Query
             }
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();

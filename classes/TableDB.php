@@ -79,12 +79,12 @@ abstract class TableDB implements CRUD, Calculation
     public function insert(array $obj) : bool
     {
         try {
-            $dados = $obj;
+            $data = $obj;
             $strKeys = "";
             $strBinds = "";
             $values = [];
             $binds = [];
-            foreach ($dados as $key => $value){
+            foreach ($data as $key => $value){
                 $strKeys = "{$strKeys}, {$key}";
                 $strBinds = "{$strBinds}, :{$key}";
                 $binds[] = ":{$key}";
@@ -92,24 +92,24 @@ abstract class TableDB implements CRUD, Calculation
             }
             $strKeys = substr($strKeys, 1);
             $strBinds = substr($strBinds, 1);
-            $dados = [$strKeys, $strBinds, $binds, $values];
+            $data = [$strKeys, $strBinds, $binds, $values];
             
-            $sql = "INSERT INTO {$this->tableName} ({$dados[0]}) VALUES ({$dados[1]});";
+            $sql = "INSERT INTO {$this->tableName} ({$data[0]}) VALUES ({$data[1]});";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            for ($i = 0; $i < count($dados[2]); $i++) {
-                $valor = $dados[3][$i];
-                $param = $this->getParam($valor);
-                $stmt->bindValue("{$dados[2][$i]}", $valor, $param);
+            for ($i = 0; $i < count($data[2]); $i++) {
+                $value = $data[3][$i];
+                $param = $this->getParam($value);
+                $stmt->bindValue("{$data[2][$i]}", $value, $param);
             }
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setLastId($pdo->lastInsertId());
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -129,38 +129,38 @@ abstract class TableDB implements CRUD, Calculation
     public function update(array $obj, int $id) : bool
     {
         try{
-            $dados = $obj;
+            $data = $obj;
             $strKeys = "";
             $values = [];
             $binds = [];
             $cont = 0;
-            foreach ($dados as $key => $value){
+            foreach ($data as $key => $value){
                 $cont++;
-                $strKeys .= ($cont == count($dados)) ? "{$key} = :{$key}" : "{$key} = :{$key}, ";
+                $strKeys .= ($cont == count($data)) ? "{$key} = :{$key}" : "{$key} = :{$key}, ";
                 $binds[] = ":{$key}";
                 $values[] = $value;
             }
             $strKeys = substr($strKeys, 0);
-            $dados = [$strKeys, $binds, $values];
+            $data = [$strKeys, $binds, $values];
             
             $sql = "UPDATE {$this->tableName}
-                    SET {$dados[0]}
+                    SET {$data[0]}
                     WHERE {$this->primaryKey} = :id;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            for ($i = 0; $i < count($dados[2]); $i++) {
-                $valor = $dados[2][$i];
-                $param = $this->getParam($valor);
-                $stmt->bindValue("{$dados[1][$i]}", $valor, $param);
+            for ($i = 0; $i < count($data[2]); $i++) {
+                $value = $data[2][$i];
+                $param = $this->getParam($value);
+                $stmt->bindValue("{$data[1][$i]}", $value, $param);
             }
             $stmt->bindParam(':id', $id);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -173,50 +173,50 @@ abstract class TableDB implements CRUD, Calculation
      * @name updateWhere
      * @desc Faz a Actualização de Dados na tabela através do Id
      * @param array $obj
-     * @param array $condicoes
+     * @param array $conditions
      * @return boolean
      * @example: $tb->updateWhere(['nome'=>'Maria José', 'idade'=>29], ['nome'=>'Maria']);
      * */
-    public function updateWhere(array $obj, array $condicoes) : bool
+    public function updateWhere(array $obj, array $conditions) : bool
     {
         try{
-            $dados = $obj;
+            $data = $obj;
             $strKeys = "";
             $values = [];
             $binds = [];
             $cont = 0;
-            foreach ($dados as $key => $value){
+            foreach ($data as $key => $value){
                 $cont++;
-                $strKeys .= ($cont == count($dados)) ? "{$key} = :{$key}" : "{$key} = :{$key}, ";
+                $strKeys .= ($cont == count($data)) ? "{$key} = :{$key}" : "{$key} = :{$key}, ";
                 $binds[] = ":{$key}";
                 $values[] = $value;
             }
             $strKeys = substr($strKeys, 0);
-            $dados = [$strKeys, $binds, $values];
+            $data = [$strKeys, $binds, $values];
             
             $where = "";
-            foreach ($condicoes as $chave => $valor){
-                $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                $where .= "{$chave} = {$novoValor} AND ";
+            foreach ($conditions as $key => $value){
+                $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                $where .= "{$key} = {$newValue} AND ";
             }
             
             $sql = "UPDATE {$this->tableName}
-                    SET {$dados[0]}
+                    SET {$data[0]}
                     WHERE {$where} 1 ; ";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            for ($i = 0; $i < count($dados[2]); $i++) {
-                $valor = $dados[2][$i];
-                $param = $this->getParam($valor);
-                $stmt->bindValue("{$dados[1][$i]}", $valor, $param);
+            for ($i = 0; $i < count($data[2]); $i++) {
+                $value = $data[2][$i];
+                $param = $this->getParam($value);
+                $stmt->bindValue("{$data[1][$i]}", $value, $param);
             }
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -246,13 +246,13 @@ abstract class TableDB implements CRUD, Calculation
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setLastId($pdo->lastInsertId());
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -280,9 +280,9 @@ abstract class TableDB implements CRUD, Calculation
              $stmt->execute();
              $this->setNumCols($stmt->columnCount());
              $this->setNumRows($stmt->rowCount());
-             $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+             $obj = $stmt->fetch(PDO::FETCH_OBJ);
              Connection::disconnect();
-             return $objecto;
+             return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -331,12 +331,12 @@ abstract class TableDB implements CRUD, Calculation
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -349,25 +349,25 @@ abstract class TableDB implements CRUD, Calculation
      * @name deleteOnly
      * @desc Elimina um registo da tabela apenas onde o nome do campo tiver o valor
      * @param int $id
-     * @param mixed $valor
+     * @param mixed $value
      * @return bool
      * @example: $tb->deleteOnly('nome', 'Maria');
      * */
-    public function deleteOnly(string $campo, $valor) : bool
+    public function deleteOnly(string $field, $value) : bool
     {
         try {            
             $sql = "DELETE FROM {$this->tableName}
-                    WHERE {$campo} = :valor;";
+                    WHERE {$field} = :value;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
-            $resultado = $stmt->execute();
+            $stmt->bindParam(':value', $value);
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -379,18 +379,18 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name deleteMany
      * @desc Elimina vários/cada registos da tabela, onde o campo tem os valores passados
-     * @param string $campo
-     * @param array $valores
+     * @param string $field
+     * @param array $values
      * @return bool
      * @example: $tb->deleteMany('id', [1, 3, 5]);
      * @example: $tb->deleteMany('nome', ['Maria', 'Paulo']);
      * */
-    public function deleteMany(string $campo, array $valores) : bool
+    public function deleteMany(string $field, array $values) : bool
     {
-        foreach ($valores as $valor){
-            $resultado = $this->deleteOnly($campo, $valor, 'perm');
+        foreach ($values as $value){
+            $result = $this->deleteOnly($field, $value, 'perm');
         }  
-        return $resultado;
+        return $result;
     }
     
     
@@ -398,35 +398,35 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name deleteWhere
      * @desc Elimina um registo de acordo as condições passadas
-     * @param array $condicoes
-     * @param string $operador
+     * @param array $conditions
+     * @param string $operator
      * @return bool
      * @example: $tb->deleteWhere(['idade'=>25, 'nome'=>'António'], 'OR');
      *  <br> $tb->deleteWhere(['nome'=>'José']);
      * */
-    public function deleteWhere(array $condicoes, string $operador='AND') : bool
+    public function deleteWhere(array $conditions, string $operator='AND') : bool
     {
         try {
             $where = "";
             $sql = "";
-            $aux = ($operador=='AND') ? 1 : 0;
-            foreach ($condicoes as $chave => $valor){
-                $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                if($operador=='AND' || $operador=='OR')
-                   $where .= "{$chave} = {$novoValor} {$operador} ";
-                else  {$where .= "Operador '{$operador}' Nao Permitido";  break;}
+            $aux = ($operator=='AND') ? 1 : 0;
+            foreach ($conditions as $key => $value){
+                $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                if($operator=='AND' || $operator=='OR')
+                   $where .= "{$key} = {$newValue} {$operator} ";
+                else  {$where .= "Operador '{$operator}' Nao Permitido";  break;}
             }
             $sql .= "DELETE FROM {$this->tableName} 
                         WHERE {$where} {$aux}";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }   
@@ -438,30 +438,30 @@ abstract class TableDB implements CRUD, Calculation
      * @name search
      * @desc Faz uma simples Busca os registos numa tabela, obedecendo as condições dadas e os operadores
      *      <br>Operadores lógicos: <i>AND</i> e <i>OR</i> <br> Operadores relacionais: <i>LIKE</i>, <i>'='</i> e <i><></i>
-     * @param array $condicoes
-     * @param string $opLogico
-     * @param string $opRelacional
+     * @param array $conditions
+     * @param string $logOp
+     * @param string $relOp
      * @return array
      * @example: $tb->search(['sexo'=>'Feminino']);
      * @example: $tb->search(['idade'=>27, 'sexo'=>'Masculino'], 'AND', '=');
      * */
-    public function search(array $condicoes, string $opLogico='OR', string $opRelacional='LIKE') : array
+    public function search(array $conditions, string $logOp='OR', string $relOp='LIKE') : array
     {
         try {
              $where = "";
-             $aux = ($opLogico=='AND') ? 1 : 0;
-             foreach ($condicoes as $chave => $valor){
-                if($opRelacional == 'LIKE'){
-                    $strCond = " LIKE '%{$valor}%'";
+             $aux = ($logOp=='AND') ? 1 : 0;
+             foreach ($conditions as $key => $value){
+                if($relOp == 'LIKE'){
+                    $strCond = " LIKE '%{$value}%'";
                 }
-                else if($opRelacional == '=' || $opRelacional == '<>'){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond = " {$opRelacional} {$novoValor}" ;
+                else if($relOp == '=' || $relOp == '<>'){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond = " {$relOp} {$newValue}" ;
                 }
                 else{
-                    $strCond = "'{$opRelacional}' Operador Invalido" ;
-                };
-                $where .= "{$chave} {$strCond} {$opLogico} ";
+                    $strCond = "'{$relOp}' Operador Invalido" ;
+                }
+                $where .= "{$key} {$strCond} {$logOp} ";
             }
             $sql = "SELECT * FROM {$this->tableName}
                     WHERE ({$where} {$aux});";
@@ -487,13 +487,13 @@ abstract class TableDB implements CRUD, Calculation
      * @return bool
      * @example: $tb->exists(['nome'=>'Maria José']);
      * */
-    public function exists(array $condicoes) : bool
+    public function exists(array $conditions) : bool
     {
         try {
             $strCond = "";
-            foreach ($condicoes as $chave => $valor){
-                $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                $strCond .= " $chave = {$novoValor} AND " ;
+            foreach ($conditions as $key => $value){
+                $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                $strCond .= " $key = {$newValue} AND " ;
             }
             $sql = "SELECT * 
                     FROM {$this->tableName}
@@ -503,9 +503,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $resultado = ($stmt->rowCount() > 0);
+            $result = ($stmt->rowCount() > 0);
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -517,25 +517,25 @@ abstract class TableDB implements CRUD, Calculation
      * @name unique
      * @desc Retorna um registo da  atraves de um campo e o seu valor
      * <br> O campo deve ser único
-     * @param string $campoUnico
-     * @param mixed $valor
+     * @param string $field
+     * @param mixed $value
      * @return object
      * @example: $tb->unique('email', 'exemplo@gmail.com';
      * */
-    public function unique(string $campoUnico, $valor) : object
+    public function unique(string $field, $value) : object
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campoUnico} = :valor;";
+                    WHERE {$field} = :value;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -560,9 +560,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -587,9 +587,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -614,9 +614,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -626,36 +626,36 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name values
      * @desc Retorna um Todos os valores de dum campo
-     * @param string $campo
-     * @param array $condicoes
+     * @param string $field
+     * @param array $conditions
      * @return array
      * @example: $tb->values('nome');
      * @example: $tb->values('idade', ['sexo'=>'Masculino']);
      * */
-    public function values(string $campo, array $condicoes=null) : array
+    public function values(string $field, array $conditions=null) : array
     {
         try {
             $strCond = "";
-            $valores = [];
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            $values = [];
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
-            $sql = "SELECT {$campo} AS valor FROM {$this->tableName}
+            $sql = "SELECT {$field} AS val FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $resultado = $stmt->fetchAll(PDO::FETCH_OBJ);
-            foreach ($resultado as $elemento){
-                $valores [] = $elemento->valor;
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            foreach ($result as $element){
+                $values [] = $element->val;
             }
             Connection::disconnect();
-            return $valores;
+            return $values;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -666,28 +666,28 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name between
      * @desc Retorna os registos onde campo está entre inicio e fim
-     * @param string $campo
-     * @param mixed $inicio
-     * @param mixed $fim
+     * @param string $field
+     * @param mixed $start
+     * @param mixed $end
      * @return array
      * @example: $tb->between('idade', 20, 43);
      * @example: $tb->between('data', '2019-01-01', '2020-12-31');
      * */
-    public function between(string $campo, $inicio, $fim) : array
+    public function between(string $field, $start, $end) : array
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} BETWEEN :inicio AND :fim;";
+                    WHERE {$field} BETWEEN :start AND :end;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':inicio', $inicio);
-            $stmt->bindParam(':fim', $fim);
+            $stmt->bindParam(':start', $start);
+            $stmt->bindParam(':end', $end);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -697,28 +697,28 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name notBetween
      * @desc Retorna  os registos onde campo não está entre inicio e fim
-     * @param string $campo
-     * @param mixed $inicio
-     * @param mixed $fim
+     * @param string $field
+     * @param mixed $start
+     * @param mixed $end
      * @return array
      * @example: $tb->notBetween('idade', 20, 43);
      * @example: $tb->notBetween('data', '2019-01-01', '2020-12-31');
      * */
-    public function notBetween(string $campo, $inicio, $fim) : array
+    public function notBetween(string $field, $start, $end) : array
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} NOT BETWEEN :inicio AND :fim;";
+                    WHERE {$field} NOT BETWEEN :start AND :end;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':inicio', $inicio);
-            $stmt->bindParam(':fim', $fim);
+            $stmt->bindParam(':start', $start);
+            $stmt->bindParam(':end', $end);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -729,32 +729,32 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name in
      * @desc Retorna um Todos os registos onde campo está no Intervalo (IN)
-     * @param string $campo
-     * @param array $valores
+     * @param string $field
+     * @param array $values
      * @return array
      * @example: $tb->in('idade', [20, 39, 12, 43]);
      * @example: $tb->in('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
-    public function in(string $campo, array $valores) : array
+    public function in(string $field, array $values) : array
     {
         try {
             $cont = 0;
             $strVal = "";
-            foreach ($valores as $valor){
+            foreach ($values as $value){
                 $cont++;
-                $novoValor = (is_string($valor)) ? " '{$valor}' " : $valor;
-                $strVal .= ($cont == count($valores)) ? " {$novoValor} " : " {$novoValor}, ";
+                $newValue = (is_string($value)) ? " '{$value}' " : $value;
+                $strVal .= ($cont == count($values)) ? " {$newValue} " : " {$newValue}, ";
             }
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} IN ({$strVal});";
+                    WHERE {$field} IN ({$strVal});";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -765,25 +765,25 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name isNull
      * @desc Retorna um Todos os registos onde o campo está nulo
-     * @param string $campo
+     * @param string $field
      * @return array
      * @example: $tb->isNull('altura');
      * @example: $tb->isNull('data');
      * */
-    public function isNull(string $campo) : array
+    public function isNull(string $field) : array
     {
         try {
        
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} IS NULL;";
+                    WHERE {$field} IS NULL;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -794,26 +794,26 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name isNotNull
      * @desc Retorna um Todos os registos onde campo não tem o valor nulo
-     * @param string $campo
-     * @param array $valores
+     * @param string $field
+     * @param array $values
      * @return array
      * @example: $tb->isNotNull('altura');
      * @example: $tb->isNotNull('data');
      * */
-    public function isNotNull(string $campo) : array
+    public function isNotNull(string $field) : array
     {
         try {
             
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} IS NOT NULL;";
+                    WHERE {$field} IS NOT NULL;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -824,32 +824,32 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name notIn
      * @desc Retorna um Todos os registos onde campo está no Intervalo (IN)
-     * @param string $campo
-     * @param array $valores
+     * @param string $field
+     * @param array $values
      * @return array
      *@example: $tb->notIn('idade', [20, 39, 12, 43]);
      * @example: $tb->notIn('data', ['2019-01-01', '2019-09-08', '2020-12-31']);
      * */
-    public function notIn(string $campo, array $valores) : array
+    public function notIn(string $field, array $values) : array
     {
         try {
             $cont = 0;
             $strVal = "";
-            foreach ($valores as $valor){
+            foreach ($values as $value){
                 $cont++;
-                $novoValor = (is_string($valor)) ? " '{$valor}' " : $valor;
-                $strVal .= ($cont == count($valores)) ? " {$novoValor} " : " {$novoValor}, ";
+                $newValue = (is_string($value)) ? " '{$value}' " : $value;
+                $strVal .= ($cont == count($values)) ? " {$newValue} " : " {$newValue}, ";
             }
             $sql = "SELECT * FROM {$this->tableName}
-                    WHERE {$campo} NOT IN ({$strVal});";
+                    WHERE {$field} NOT IN ({$strVal});";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -860,18 +860,18 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name except
      * @desc Retorna um Todos os registos excepto os que cumprem as condições
-     * @param array $condicoes
+     * @param array $conditions
      * @return array
      * @example: $tb->except(['sexo'=>'Feminino', 'idade'=>30]);
      * @example: $tb->except(['nome'=>'José']);
      * */
-    public function except(array $condicoes) : array
+    public function except(array $conditions) : array
     {
         try {
             $strCond = "";
-            foreach ($condicoes as $chave => $valor){
-                $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                $strCond .= " {$chave} <> {$novoValor} AND " ;
+            foreach ($conditions as $key => $value){
+                $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                $strCond .= " {$key} <> {$newValue} AND " ;
             }
             $sql = "SELECT * FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
@@ -880,9 +880,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -893,18 +893,18 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name only
      * @desc Retorna apenas os registos  que cumprem as condições
-     * @param array $condicoes
+     * @param array $conditions
      * @return array
      *@example: $tb->only(['data'=>'2020-06-08', 'tipo'=>'Normal']);
      *@example: $tb->only(['sexo'=>'Masculino']);
      * */
-    public function only(array $condicoes) : array
+    public function only(array $conditions) : array
     {
         try {
             $strCond = "";
-            foreach ($condicoes as $chave => $valor){
-                $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                $strCond .= " {$chave} = {$novoValor} AND " ;
+            foreach ($conditions as $key => $value){
+                $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                $strCond .= " {$key} = {$newValue} AND " ;
             }
             $sql = "SELECT * FROM {$this->tableName}
                     WHERE ($strCond 1);";
@@ -913,9 +913,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -926,26 +926,26 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name limit
      * @desc Retorna um Todos os registos no intervalo de início até fim
-     * @param int $inicio
-     * @param int $fim
+     * @param int $start
+     * @param int $end
      * @return array
      * @example: $tb->limit(1, 10);
      * */
-    public function limit(int $inicio, int $fim) : array
+    public function limit(int $start, int $end) : array
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
-                    LIMIT :inicio, :fim;";
+                    LIMIT :start, :end;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':inicio', $inicio, PDO::PARAM_INT);
-            $stmt->bindParam(':fim', $fim, PDO::PARAM_INT);
+            $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+            $stmt->bindParam(':end', $end, PDO::PARAM_INT);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -958,24 +958,24 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Retorna um Todos os registos ordenado pelo campo
      * <br> Por defeito o métdo já faz por Ordem Crescente
      * @param string campo
-     * @param string $ordem
+     * @param string $order
      * @return array
      * @example: $tb->orderBy('nome');
      *  <br>     $tb->only('data', 'DESC');
      * */
-    public function orderBy(string $campo, string $ordem='ASC') : array
+    public function orderBy(string $field, string $order='ASC') : array
     {
         try {
             $sql = "SELECT * FROM {$this->tableName}
-                    ORDER BY {$campo} {$ordem}";
+                    ORDER BY {$field} {$order}";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -991,19 +991,19 @@ abstract class TableDB implements CRUD, Calculation
      * @return array
      * @example: $tb->distinct('data');
      * */
-    public function distinct(string $campo) : array
+    public function distinct(string $field) : array
     {
         try {
-            $sql = "SELECT DISTINCT({$campo})
+            $sql = "SELECT DISTINCT({$field})
                     FROM {$this->tableName};";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1018,20 +1018,20 @@ abstract class TableDB implements CRUD, Calculation
      * @return array
      * @example: $tb->groupBy('sexo');
      * */
-    public function groupBy(string $campo) : array
+    public function groupBy(string $field) : array
     {
         try {
             $sql = "SELECT *
                     FROM {$this->tableName}
-                    GROUP BY {$campo};";
+                    GROUP BY {$field};";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1044,21 +1044,21 @@ abstract class TableDB implements CRUD, Calculation
      * @name all
      * @desc Retorna um Todos os registos  seguindo ou não as condições e outros parametros
      *     <br> Também permite usar condições e ordenar os registos
-     * @param array $condicoes
+     * @param array $conditions
      * @return array
      * @example: $tb->all();
      * @example: $tb->all(['data'=> '2020-10-10', 'sexo'=>'Feminino'], 'nome', 'ASC', 10, 50);
      * */
-    public function all(array $condicoes=null, string $campoOrdem=null, string $ordem=null, int $inicio=null, int $fim=null) : array
+    public function all(array $conditions=null, string $fieldOrdem=null, string $order=null, int $start=null, int $end=null) : array
     {
         try {
             $strCond = "";
-            $strOrd = ($campoOrdem==null && $ordem==null) ? " " :" ORDER BY {$campoOrdem} {$ordem} ";
-            $strLim = ($inicio==null && $fim==null) ? " " : " LIMIT {$inicio}, {$fim}";
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            $strOrd = ($fieldOrdem==null && $order==null) ? " " :" ORDER BY {$fieldOrdem} {$order} ";
+            $strLim = ($start==null && $end==null) ? " " : " LIMIT {$start}, {$end}";
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
             $sql = "SELECT * FROM {$this->tableName}
@@ -1069,9 +1069,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $obj = $stmt->fetchAll(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto;
+            return $obj;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1084,31 +1084,30 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Incrementa ou soma  um valor ao campo
      * <br> Pode ser usado para aumentar o saldo de um cliente,
      * <br> ou Aumentar a quantidade em estoque do produto
-     * @param string $campo
-     * @param mixed $valor
+     * @param string $field
+     * @param mixed $value
      * @param int id
      * @return bool
      * @example: $tb->increase('qtd_stock', 2, 43);
      * @example: $tb->increase('saldo_cliente', 1000, 2)
      * */
-    public function increase(string $campo, $valor, int $id) : bool
+    public function increase(string $field, $value, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
-                    SET {$campo} = {$campo} + :valor, 
-                       actualizado_em = NOW()
+                    SET {$field} = {$field} + :value
                     WHERE {$this->primaryKey} = :id;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -1122,31 +1121,30 @@ abstract class TableDB implements CRUD, Calculation
      * @desc Decrementa ou subtrai um valor ao campo
      * <br> Pode ser usado para diminuir o saldo de um cliente,
      * <br> ou Dimunir a quantidade em estoque do produto
-     * @param string $campo
-     * @param mixed $valor
+     * @param string $field
+     * @param mixed $value
      * @param int id
      * @return bool
      * @example: $tb->decrease('qtd_stock', 2, 43);
      * @example: $tb->deccrease('saldo_cliente', 1000, 2)
      * */
-    public function decrease(string $campo, $valor, int $id) : bool
+    public function decrease(string $field, $value, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
-                    SET {$campo} = {$campo} - :valor,
-                       actualizado_em = NOW()
+                    SET {$field} = {$field} - :value
                     WHERE {$this->primaryKey} = :id;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -1159,30 +1157,29 @@ abstract class TableDB implements CRUD, Calculation
      * @name multiply
      * @desc Multiplica um valor ao campo
      * <br> Pode ser usado para multiplicar o valor de um campo, por um número
-     * @param string $campo
-     * @param mixed $valor
+     * @param string $field
+     * @param mixed $value
      * @param int $id
      * @return bool
      * @example: $tb->multiply('quantidade', 2.79, 13)
      * */
-    public function multiply(string $campo, $valor, int $id) : bool
+    public function multiply(string $field, $value, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
-                    SET {$campo} = {$campo} * :valor,
-                       actualizado_em = NOW()
+                    SET {$field} = {$field} * :value
                     WHERE {$this->primaryKey} = :id;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -1195,29 +1192,28 @@ abstract class TableDB implements CRUD, Calculation
      * @name divide
      * @desc Divide um valor ao campo
      *  <br> Pode ser usado para dividir o valor de um campo, por um número
-     * @param string $campo
-     * @param mixed $valor
+     * @param string $field
+     * @param mixed $value
      * @return bool
      * @example: $tb->divide('quantidade', 0.5, 2)
      * */
-    public function divide(string $campo, $valor, int $id) : bool
+    public function divide(string $field, $value, int $id) : bool
     {
         try {
             $sql = "UPDATE {$this->tableName}
-                    SET {$campo} = {$campo} / :valor,
-                       actualizado_em = NOW()
+                    SET {$field} = {$field} / :value
                     WHERE {$this->primaryKey} = :id;";
             $pdo = Connection::connect();
             $pdo->beginTransaction();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $resultado = $stmt->execute();
+            $result = $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
             $pdo->commit();
             Connection::disconnect();
-            return $resultado;
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
             $pdo->rollBack();
@@ -1242,9 +1238,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->total;
+            return $obj->total;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1255,26 +1251,26 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name countWhere
      * @desc Retorna o numero de registos da tabela onde o campo igual ao valor
-     * @param string $campo 
-     * @param mixed $valor
+     * @param string $field 
+     * @param mixed $value
      * @return int
      * @example: $tb->countWhere('sexo', 'Masculino');
      * */
-    public function countWhere(string $campo, $valor) : int
+    public function countWhere(string $field, $value) : int
     {
         try {
             $sql = "SELECT COUNT(*) AS total
                     FROM {$this->tableName}
-                    WHERE {$campo} = :valor;";
+                    WHERE {$field} = :value;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->total;
+            return $obj->total;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1285,26 +1281,26 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name countExcept
      * @desc Retorna o numero de registos da tabela, Excepto onde o campo igual ao valor
-     * @param string $campo 
-     * @param mixed $valor
+     * @param string $field 
+     * @param mixed $value
      * @return int
      * @example  $tb->countExcept('data', '1990-11-10')
      * */
-    public function countExcept(string $campo, $valor) : int
+    public function countExcept(string $field, $value) : int
     {
         try {
-            $sql = "SELECT COUNT(*) AS total
+            $sql = "SELECT COUNT(*) AS result
                     FROM {$this->tableName}
-                    WHERE {$campo} <> :valor;";
+                    WHERE {$field} <> :value;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':valor', $valor);
+            $stmt->bindParam(':value', $value);
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->total;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1316,23 +1312,23 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name max
      * @desc Retorna o maior valor de um campo, obedecendo as condições
-     * @param string $campo
-     * @param array $condicoes
+     * @param string $field
+     * @param array $conditions
      * @return mixed
      * @example:  $tb->max('salario', ['sexo'=>'Feminino'])
      * @example: $tb->max('altura')
      * */
-    public function max(string $campo, array $condicoes=null) 
+    public function max(string $field, array $conditions=null) 
     {
         try {
             $strCond = "";
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
-            $sql = "SELECT MAX({$campo}) AS maior
+            $sql = "SELECT MAX({$field}) AS result
                     FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
             $pdo = Connection::connect();
@@ -1340,9 +1336,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->maior;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1353,23 +1349,23 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name min
      * @desc Retorna o menor valor de um campo, obedecendo as condições
-     * @param string $campo
-     * @param array $condicoes
+     * @param string $field
+     * @param array $conditions
      * @return mixed
      * @example:  $tb->min('salario', ['sexo'=>'Feminino'])
      * @example: $tb->min('altura')
      * */
-    public function min(string $campo, array $condicoes=null)
+    public function min(string $field, array $conditions=null)
     {
         try {
             $strCond = "";
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
-            $sql = "SELECT MIN({$campo}) AS menor
+            $sql = "SELECT MIN({$field}) AS result
                     FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
             $pdo = Connection::connect();
@@ -1377,9 +1373,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->menor;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1390,23 +1386,23 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name sum
      * @desc Retorna a Soma valor de um campo, obedecendo as condições
-     * @param string $campo
-     * @param array $condicoes
+     * @param string $field
+     * @param array $conditions
      * @return float
      * @example:  $tb->sum('salario', ['pais'=>'Angola'])
      * @example: $tb->sum('salario')
      * */
-    public function sum(string $campo, array $condicoes=null) : float
+    public function sum(string $field, array $conditions=null) : float
     {
         try {
             $strCond = "";
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
-            $sql = "SELECT SUM({$campo}) AS soma
+            $sql = "SELECT SUM({$field}) AS result
                     FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
             $pdo = Connection::connect();
@@ -1414,9 +1410,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->soma;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1427,23 +1423,23 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name avg
      * @desc Retorna a Média valor de um campo, obedecendo as condições
-     * @param string $campo
-     * @param array $condicoes
+     * @param string $field
+     * @param array $conditions
      * @return float
      *@example:  $tb->media('altura', ['sexo'=>'Feminino'])
      * @example: $tb->media('altura')
      * */
-    public function avg(string $campo, array $condicoes=null) : float
+    public function avg(string $field, array $conditions=null) : float
     {
         try {
             $strCond = "";
-            if($condicoes != null){
-                foreach ($condicoes as $chave => $valor){
-                    $novoValor = (is_string($valor)) ? "'{$valor}'" : $valor;
-                    $strCond .= " {$chave} = {$novoValor} AND " ;
+            if($conditions != null){
+                foreach ($conditions as $key => $value){
+                    $newValue = (is_string($value)) ? "'{$value}'" : $value;
+                    $strCond .= " {$key} = {$newValue} AND " ;
                 }
             }
-            $sql = "SELECT AVG({$campo}) AS media
+            $sql = "SELECT AVG({$field}) AS result
                     FROM {$this->tableName}
                     WHERE ({$strCond} 1);";
             $pdo = Connection::connect();
@@ -1451,9 +1447,9 @@ abstract class TableDB implements CRUD, Calculation
             $stmt->execute();
             $this->setNumCols($stmt->columnCount());
             $this->setNumRows($stmt->rowCount());
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->media;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -1543,17 +1539,17 @@ abstract class TableDB implements CRUD, Calculation
      * @copyright 2020
      * @name getParam
      * @desc Retorna uma constante de filtragem da classe PDO
-     * @param mixed $valor
+     * @param mixed $value
      * @return mixed
      *
      * */
-    private function getParam($valor)
+    private function getParam($value)
     {
-        if(is_int($valor))
+        if(is_int($value))
             $param = PDO::PARAM_INT;
-        else if(is_string($valor))
+        else if(is_string($value))
             $param = PDO::PARAM_STR;
-        else if(is_bool($valor))
+        else if(is_bool($value))
              $param = PDO::PARAM_BOOL;
         else
             $param = null;

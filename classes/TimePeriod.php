@@ -25,24 +25,24 @@ trait TimePeriod
      * @copyright 2020
      * @name mysqlPeriod
      * @desc Converte o tempo em numa palavra reservada do MySQL
-     * @param string $tempo
+     * @param string $period
      * @return string
      * */
-    private function mysqlPeriod(string $tempo) : string
+    private function mysqlPeriod(string $period) : string
     {
-        $tempo = strtolower($tempo);
-        switch ($tempo) {
-            case 'ano': $valor = "YEAR"; break;
-            case 'mes': $valor = "YEAR_MONTH"; break;
-            case 'semana': $valor = "WEEK"; break;
-            case 'dia': $valor = "DAY"; break;
-            case 'hora': $valor = "HOUR"; break;
-            case 'minuto': $valor = "MINUTE"; break;
-            case 'segundo': $valor = "SECOND"; break;
-            case 'milissegundo': $valor = "MINUTE_MICROSECOND"; break;
-            default: $valor = ""; break;
+        $period = strtolower($period);
+        switch ($period) {
+            case 'year': $value = "YEAR"; break;
+            case 'month': $value = "YEAR_MONTH"; break;
+            case 'week': $value = "WEEK"; break;
+            case 'day': $value = "DAY"; break;
+            case 'hour': $value = "HOUR"; break;
+            case 'minute': $value = "MINUTE"; break;
+            case 'second': $value = "SECOND"; break;
+            case 'microsecond': $value = "MINUTE_MICROSECOND"; break;
+            default: $value = ""; break;
         }
-        return $valor;
+        return $value;
     }
     
     
@@ -51,21 +51,21 @@ trait TimePeriod
      * @copyright 2020
      * @name age
      * @desc Calcula a idade com base na data
-     * @param string $dataNasc
+     * @param string $date
      * @return int
      * @example: $tb->age('1994-10-22') 
      * */
-    public function age(string $dataNasc) : int
+    public function age(string $date) : int
     {
         try {
-            $sql = "SELECT TIMESTAMPDIFF(YEAR, :data_nasc, CURDATE())  'idade'; ";
+            $sql = "SELECT TIMESTAMPDIFF(YEAR, :date, CURDATE())  AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data_nasc', $dataNasc, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return (int) $objecto->idade;
+            return (int) $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -77,25 +77,25 @@ trait TimePeriod
      * @name subDate
      * @desc Subtrai um intervalo de tempo na data e retorna o resultado
      * <br> Pode subtrair: semana, dias, anos, etc
-     * @param string $data
-     * @param string $intervalo
-     * @param string $tempo
+     * @param string $date
+     * @param string $interval
+     * @param string $period
      * @return string
-     * @example: $tb->subDate('2020-10-22', '3', 'ano') 
-     * @example: $tb->subDate('2020-10-22', '5', 'mes') 
+     * @example: $tb->subDate('2020-10-22', '3', 'year') 
+     * @example: $tb->subDate('2020-10-22', '5', 'month') 
      * */
-    public function subDate(string $data, string $intervalo, string $tempo) : string
+    public function subDate(string $date, string $interval, string $period) : string
     {
         try {
-            $valor = $this->mysqlPeriod($tempo);
-            $sql = "SELECT DATE_SUB(:data, INTERVAL {$intervalo} {$valor}) 'diferenca'; ";
+            $value = $this->mysqlPeriod($period);
+            $sql = "SELECT DATE_SUB(:date, INTERVAL {$interval} {$value}) as result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->diferenca;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -107,25 +107,25 @@ trait TimePeriod
      * @name addDate
      * @desc Adiciona um intervalo de tempo na data e retorna o resultado
      * <br> Pode adicionar: semana, dias, anos, etc
-     * @param string $data
-     * @param string $intervalo
-     * @param string $tempo
+     * @param string $date
+     * @param string $interval
+     * @param string $period
      * @return string
-     * @example: $tb->addDate('2020-10-22', '15', 'dia') 
-     * @example: $tb->addDate('2013-10-22', '8', 'ano')
+     * @example: $tb->addDate('2020-10-22', '15', 'day') 
+     * @example: $tb->addDate('2013-10-22', '8', 'year')
      * */
-    public function addDate(string $data, string $intervalo, string $tempo) : string
+    public function addDate(string $date, string $interval, string $period) : string
     {
         try {
-            $valor = $this->mysqlPeriod($tempo);
-            $sql = "SELECT DATE_ADD(:data, INTERVAL {$intervalo} {$valor}) 'soma'; ";
+            $value = $this->mysqlPeriod($period);
+            $sql = "SELECT DATE_ADD(:date, INTERVAL {$interval} {$value}) AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->soma;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -136,24 +136,24 @@ trait TimePeriod
      * @copyright 2020
      * @name diffDate
      * @desc Calcula a diferença de datas
-     * @param string $data1
-     * @param string $data2
+     * @param string $date1
+     * @param string $date2
      * @return string
      * @example: $tb->diffDate('2000-01-25', '2020-10-10') 
      * @example: $tb->diffDate('2010-10-22 10:00:09', '2012-12-12') 
      * */
-    public function diffDate(string $data1, string $data2) : string
+    public function diffDate(string $date1, string $date2) : string
     {
         try {
-            $sql = "SELECT DATEDIFF(:data1, :data2) 'diferenca'; ";
+            $sql = "SELECT DATEDIFF(:date1, :date2)  AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data1', $data1, PDO::PARAM_STR);
-            $stmt->bindParam(':data2', $data2, PDO::PARAM_STR);
+            $stmt->bindParam(':date1', $date1, PDO::PARAM_STR);
+            $stmt->bindParam(':date2', $date2, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->diferenca;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -166,25 +166,25 @@ trait TimePeriod
      * @name extract
      * @desc Extrai uma unidade de tempo na data
      * <br> Pode extrair Ano, dia, més, etc
-     * @param string $data
-     * @param string $tempo
+     * @param string $date
+     * @param string $period
      * @return string
-     * @example: $tb->extract('2000-01-25', 'dia')
-     * @example: $tb->extract('2000-01-25', 'ano')
-     * @example: $tb->extract('2000-01-25 09:12:00', 'minuto')
+     * @example: $tb->extract('2000-01-25', 'day')
+     * @example: $tb->extract('2000-01-25', 'year')
+     * @example: $tb->extract('2000-01-25 09:12:00', 'minute')
      * */
-    public function extract(string $data, string $tempo) : string
+    public function extract(string $date, string $period) : string
     {
         try {
-            $valor = $this->mysqlPeriod($tempo);
-            $sql = "SELECT EXTRACT({$valor} FROM :data) 'resultado'; ";
+            $value = $this->mysqlPeriod($period);
+            $sql = "SELECT EXTRACT({$value} FROM :date) AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->resultado;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -196,37 +196,37 @@ trait TimePeriod
      * @name convertPeriod
      * @desc Obtém um determinado Período tempo apartir da data
      * <br> Apenas retorna Ano, dia da Semana, més do Ano, último dia do més, etc
-     * @param string $data
+     * @param string $date
      * @return string
-     * @example: $tb->convertPeriod('2020-01-10', 'dia')
-     * @example: $tb->convertPeriod('2000-01-25', 'hora')
-     * @example: $tb->convertPeriod('2000-01-25', 'semana')
+     * @example: $tb->convertPeriod('2020-01-10', 'day')
+     * @example: $tb->convertPeriod('2000-01-25', 'hour')
+     * @example: $tb->convertPeriod('2000-01-25', 'week')
      * */
-    public function convertPeriod(string $data, string $tipo) : string
+    public function convertPeriod(string $date, string $type) : string
     {
         try {
-            $tipo = strtolower($tipo);
-            switch ($tipo) {
-                case 'milissegundo': $strTempo = " MICROSSECOND(:data) "; break;
-                case 'segundo': $strTempo = " SECOND(:data) "; break;
-                case 'minuto':  $strTempo = " MINUTE(:data) "; break;
-                case 'hora':  $strTempo = " HOUR(:data) "; break;
-                case 'hora_completa':  $strTempo = " TIME(:data) "; break;
-                case 'dia':  $strTempo = " DAY(:data) "; break;
-                case 'semana':  $strTempo = " WEEK(:data) "; break;
-                case 'mes':  $strTempo = " MONTH(:data) "; break;
-                case 'nome_mes':  $strTempo = " MONTHNAME(:data) "; break;
-                case 'ultimo_dia_mes': $strTempo = " LAST_DAY(:data) "; break;
-                default: $strTempo = ""; break;
+            $type = strtolower($type);
+            switch ($type) {
+                case 'microsecond': $strTime = " MICROSSECOND(:date) "; break;
+                case 'second': $strTime = " SECOND(:date) "; break;
+                case 'minute':  $strTime = " MINUTE(:date) "; break;
+                case 'hour':  $strTime = " HOUR(:date) "; break;
+                case 'hour_complete':  $strTime = " TIME(:date) "; break;
+                case 'day':  $strTime = " DAY(:date) "; break;
+                case 'week':  $strTime = " WEEK(:date) "; break;
+                case 'month':  $strTime = " MONTH(:date) "; break;
+                case 'month_name':  $strTime = " MONTHNAME(:date) "; break;
+                case 'last_day': $strTime = " LAST_DAY(:date) "; break;
+                default: $strTime = ""; break;
             }
-            $sql = "SELECT {$strTempo} 'resultado' ;";
+            $sql = "SELECT {$strTime} AS result ;";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->resultado;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -238,24 +238,24 @@ trait TimePeriod
      * @copyright 2020
      * @name addTime
      * @desc Adiciona uma determinada hora (no formato HH:MM:SS) na outra 
-     * @param string $hora1
-     * @param string $hora2
-     * @param string $tempo
+     * @param string $hour1
+     * @param string $hour2
+     * @param string $period
      * @return string
      * @example: $tb->addTime('10:00:09', '08:45:23') 
      * */
-    public function addTime(string $hora1, string $hora2) : string
+    public function addTime(string $hour1, string $hour2) : string
     {
         try {
-            $sql = "SELECT ADDTIME(:hora1, :hora2) 'soma'; ";
+            $sql = "SELECT ADDTIME(:hour1, :hour2) AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':hora1', $hora1, PDO::PARAM_STR);
-            $stmt->bindParam(':hora2', $hora2, PDO::PARAM_STR);
+            $stmt->bindParam(':hour1', $hour1, PDO::PARAM_STR);
+            $stmt->bindParam(':hour2', $hour2, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->soma;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -266,24 +266,24 @@ trait TimePeriod
      * @copyright 2020
      * @name timeDiff
      * @desc Retorna a diferença de datas/horas
-     * @param string $data1
-     * @param string $data2
+     * @param string $date1
+     * @param string $date2
      * @return string
      * @example: $tb->timeDiff('10:00:09', '08:45:23') 
      * @example: $tb->timeDiff('1999-09-02', '2015-12-23') 
      * */
-    public function timeDiff(string $data1, string $data2) : string
+    public function timeDiff(string $date1, string $date2) : string
     {
         try {
-            $sql = "SELECT TIMEDIFF(:data1, :data2) 'diferenca'; ";
+            $sql = "SELECT TIMEDIFF(:date1, :date2) AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data1', $data1, PDO::PARAM_STR);
-            $stmt->bindParam(':data2', $data2, PDO::PARAM_STR);
+            $stmt->bindParam(':date1', $date1, PDO::PARAM_STR);
+            $stmt->bindParam(':date2', $date2, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->diferenca;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -295,31 +295,31 @@ trait TimePeriod
      * @copyright 2020
      * @name dayOf
      * @desc Retorna dia da semana, dia do ano ou  dia do més
-     * @param string $tipo
+     * @param string $type
      * @return string
-     * @example: $tb->dayOf('2019-08-12', 'nome_dia')
-     * @example: $tb->dayOf('2019-08-12', 'dia_mes') 
-     * @example: $tb->dayOf('2019-08-12', 'dia_ano')
+     * @example: $tb->dayOf('2019-08-12', 'name')
+     * @example: $tb->dayOf('2019-08-12', 'month') 
+     * @example: $tb->dayOf('2019-08-12', 'year')
      * */
-    public function dayOf(string $data, string $tipo) : string
+    public function dayOf(string $date, string $type) : string
     {
         try {
-            $tipo = strtolower($tipo);
-            switch ($tipo) {
-                case 'nome_dia': $strTempo = " DAYNAME(:data) "; break;
-                case 'dia_mes': $strTempo = " DAYOFMONTH(:data) "; break;
-                case 'dia_semana':  $strTempo = " DAYOFWEEK(:data) "; break;
-                case 'dia_ano':  $strTempo = " DAYOFYEAR(:data) "; break;
-                default: $strTempo = ""; break;
+            $type = strtolower($type);
+            switch ($type) {
+                case 'name': $strTime = " DAYNAME(:date) "; break;
+                case 'month': $strTime = " DAYOFMONTH(:date) "; break;
+                case 'week':  $strTime = " DAYOFWEEK(:date) "; break;
+                case 'year':  $strTime = " DAYOFYEAR(:date) "; break;
+                default: $strTime = ""; break;
             }
-            $sql = "SELECT {$strTempo} 'resultado'; ";
+            $sql = "SELECT {$strTime} AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->resultado;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -330,29 +330,29 @@ trait TimePeriod
      * @copyright 2020
      * @name dateTo
      * @desc Converte uma Data em Dias e segundos
-     * @param string $data 
-     * @param string $tipo
+     * @param string $date 
+     * @param string $type
      * @return string
-     * @example: $tb->dateTo('2013-05-02', 'dia')
-     * @example: $tb->dateTo('2013-05-02', 'segundo')
+     * @example: $tb->dateTo('2013-05-02', 'day')
+     * @example: $tb->dateTo('2013-05-02', 'second')
      * */
-    public function dateTo(string $data, string $tipo) 
+    public function dateTo(string $date, string $type) 
     {
         try {
-            $tipo = strtolower($tipo);
-            switch ($tipo) {
-                case 'dia': $strTempo = " TO_DAYS(:data) "; break;
-                case 'segundo':  $strTempo = " TO_SECONDS(:data) "; break;
-                default: $strTempo = ""; break;
+            $type = strtolower($type);
+            switch ($type) {
+                case 'day': $strTime = " TO_DAYS(:date) "; break;
+                case 'second':  $strTime = " TO_SECONDS(:date) "; break;
+                default: $strTime = ""; break;
             }
-            $sql = "SELECT {$strTempo} 'resultado'; ";
+            $sql = "SELECT {$strTime} AS result; ";
             $pdo = Connection::connect();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
             $stmt->execute();
-            $objecto = $stmt->fetch(PDO::FETCH_OBJ);
+            $obj = $stmt->fetch(PDO::FETCH_OBJ);
             Connection::disconnect();
-            return $objecto->resultado;
+            return $obj->result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

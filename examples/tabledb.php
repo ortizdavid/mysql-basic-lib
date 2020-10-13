@@ -270,17 +270,17 @@ $hora1 = date('H:i:s');
 $hora2 = '05:00:00';
 echo "<h3>Manipulando Datas...</h3>";
 echo "Da Data '{$data1}' Passaram-se a '{$cliente->age($data1)}' anos<br>";
-echo "Subtraindo 15 dias na data '{$data1}' ----------- '{$cliente->subDate($data1, '15', 'dia')}'<br>";
-echo "Adicionando 2 anos na data '{$data1}' ----------- '{$cliente->addDate($data1, '2', 'ano')}'<br>";
+echo "Subtraindo 15 dias na data '{$data1}' ----------- '{$cliente->subDate($data1, '15', 'day')}'<br>";
+echo "Adicionando 2 anos na data '{$data1}' ----------- '{$cliente->addDate($data1, '2', 'year')}'<br>";
 echo "A diferença entre as datas '{$data1}' e '{$data2}' é: '{$cliente->diffDate($data1, $data2)}'<br>";
-echo "Obtendo o mês da data '{$data2}' ---------- '{$cliente->extract($data2, 'mes')}'<br>";
-echo "Obtendo o ano da  data '{$data2}' ---------- '{$cliente->extract($data2, 'ano')}'<br>";
-echo "Conversão da data '{$data1}' em minutos --------- '{$cliente->convertPeriod($data2, 'minuto')}'<br>";
-echo "Conversão da data '{$data1}' em semanas ---------- '{$cliente->convertPeriod($data2, 'semana')}'<br>";
-echo "Último dia do mês da data '{$data1}' ----------- '{$cliente->convertPeriod($data2, 'ultimo_dia_mes')}'<br>";
+echo "Obtendo o mês da data '{$data2}' ---------- '{$cliente->extract($data2, 'month')}'<br>";
+echo "Obtendo o ano da  data '{$data2}' ---------- '{$cliente->extract($data2, 'year')}'<br>";
+echo "Conversão da data '{$data1}' em minutos --------- '{$cliente->convertPeriod($data2, 'minute')}'<br>";
+echo "Conversão da data '{$data1}' em semanas ---------- '{$cliente->convertPeriod($data2, 'week')}'<br>";
+echo "Último dia do mês da data '{$data1}' ----------- '{$cliente->convertPeriod($data2, 'last_day')}'<br>";
 echo "Adicionando '2h e 30 minutos' na Hora '{$hora1}' --------- '{$cliente->addTime($hora1, '02:30:00')}'<br>";
 echo "Diferença de Horas entre '{$hora1}' e '{$hora2}' ---------- '{$cliente->timeDiff($hora1, $hora2)}'<br>";
-echo "Obtendo o dia da semana na data '{$data2}' ------------ '{$cliente->dayOf($data2, 'dia_semana')}'<br>";
+echo "Obtendo o dia da semana na data '{$data2}' ------------ '{$cliente->dayOf($data2, 'week')}'<br>";
 echo "<hr><br>";
 ########################################################################################-
 
