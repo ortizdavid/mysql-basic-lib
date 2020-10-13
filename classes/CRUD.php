@@ -29,22 +29,22 @@ interface CRUD
     public function delete(int $id) : bool; 
     
     
-    public function deleteOnly(string $campo, $valor) : bool; 
+    public function deleteOnly(string $field, $value) : bool; 
     
 
-    public function deleteMany(string $campo, array $valores) : bool; 
+    public function deleteMany(string $field, array $values) : bool; 
     
     
-    public function deleteWhere(array $condicoes, string $operador='AND') : bool;
+    public function deleteWhere(array $conditions, string $operator='AND') : bool;
     
     
-    public function search(array $condicoes, string $operador='LIKE') : array;
+    public function search(array $conditions, string $operator='LIKE') : array;
     
     
-    public function exists(array $condicoes) : bool;
+    public function exists(array $conditions) : bool;
     
     
-    public function unique(string $campoUnico, $valor) : object;
+    public function unique(string $field, $value) : object;
     
     
     public function first() : object;
@@ -56,46 +56,46 @@ interface CRUD
     public function middle() : object;
     
     
-    public function values(string $campo, array $condicoes=null) : array;
+    public function values(string $field, array $conditions=null) : array;
     
     
-    public function between(string $campo, $inicio, $fim) : array;
+    public function between(string $field, $start, $end) : array;
     
     
-    public function notBetween(string $campo, $inicio, $fim) : array;
+    public function notBetween(string $field, $start, $end) : array;
     
     
-    public function in(string $campo, array $valores) : array;
+    public function in(string $field, array $values) : array;
     
     
-    public function notIn(string $campo, array $valores) : array;
+    public function notIn(string $field, array $values) : array;
     
     
-    public function isNull(string $campo) : array;
+    public function isNull(string $field) : array;
     
     
-    public function isNotNull(string $campo) : array;
+    public function isNotNull(string $field) : array;
     
     
-    public function distinct(string $campo) : array;
+    public function distinct(string $field) : array;
     
     
-    public function groupBy(string $campo) : array;
+    public function groupBy(string $field) : array;
     
     
-    public function except(array $condicoes) : array;
+    public function except(array $conditions) : array;
     
     
-    public function only(array $condicoes) : array;
+    public function only(array $conditions) : array;
     
     
-    public function limit(int $inicio, int $fim) : array;
+    public function limit(int $start, int $end) : array;
     
     
-    public function orderBy(string $campo, string $ordem='ASC') : array;
+    public function orderBy(string $field, string $order='ASC') : array;
     
     
-    public function all(array $condicoes=null, string $campoOrdem=null, string $ordem=null, int $inicio=null, int $fim=null) : array;
+    public function all(array $conditions=null, string $fieldToOrd=null, string $order=null, int $start=null, int $end=null) : array;
     
     
 }

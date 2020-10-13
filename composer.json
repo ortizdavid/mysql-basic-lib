@@ -1,6 +1,6 @@
 {
     "name": "ortizdavid/mysql-basic-lib",
-   
+    "description": "Serve para manipular a base de dados",
     "authors": [
         {
             "name": "Ortiz de Arcanjo António David",

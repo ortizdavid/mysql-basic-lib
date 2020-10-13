@@ -1049,11 +1049,11 @@ abstract class TableDB implements CRUD, Calculation
      * @example: $tb->all();
      * @example: $tb->all(['data'=> '2020-10-10', 'sexo'=>'Feminino'], 'nome', 'ASC', 10, 50);
      * */
-    public function all(array $conditions=null, string $fieldOrdem=null, string $order=null, int $start=null, int $end=null) : array
+    public function all(array $conditions=null, string $fieldToOrd=null, string $order=null, int $start=null, int $end=null) : array
     {
         try {
             $strCond = "";
-            $strOrd = ($fieldOrdem==null && $order==null) ? " " :" ORDER BY {$fieldOrdem} {$order} ";
+            $strOrd = ($fieldToOrd==null && $order==null) ? " " :" ORDER BY {$fieldToOrd} {$order} ";
             $strLim = ($start==null && $end==null) ? " " : " LIMIT {$start}, {$end}";
             if($conditions != null){
                 foreach ($conditions as $key => $value){
