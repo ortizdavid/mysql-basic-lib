@@ -1,6 +1,7 @@
 {
     "name": "ortizdavid/mysql-basic-lib",
     "description": "Serve para manipular a base de dados",
+    "type": "project",
     "authors": [
         {
             "name": "Ortiz de Arcanjo António David",
@@ -8,11 +9,15 @@
         }
     ],
     "require": {
-        "php": "^7.3.1"
+        "php": ">=7.4.9",
+        "ortizdavid/mysql-basic-lib": "*"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "ortizdavid\\": "src"
         }
     }
 }
+
