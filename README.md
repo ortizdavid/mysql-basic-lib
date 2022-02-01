@@ -1,8 +1,4 @@
-
-
-**************************************************************************************
-*	   					MySQL Basic Library	     					     *
-**************************************************************************************
+# MySQL Basic Library	     					    
 
 
 Autor: Ortiz de Arcanjo António David
@@ -29,20 +25,21 @@ Número de Classes: 13
 
 Número de Métodos:
 
-Descrição:
-O Mysq Basic Lib é uma biblioteca desenvolvida em PHP para acesso a base de dados para o SGBD MySQL. Futuramente poderá ser extendida para uma ORM.
-Esta biblioteca é baseada no conceito de ORM.
-Pode funcionar como a camada de dados de uma aplicação (no caso da arquitectura Multicamadas)
-Pode ser usada em pequenas e médias aplicações com MySQL.
-Permite ao desenvolvedor aceder a base de dados apenas com os objectos e métodos.
-Fornece Muitas das Funcionalidades do MySQL.
-Alguns Métodos que acessam os comandos da DDL, DML e DCL.
-Permite inserir, actualizar e obter registos nas tabelas
-Permite Manipular as tabelas.
-Permite criar, eliminar e alterar base de dados
-Permite criar usuários, altribuir privilégios e manipular os usuários
-Permite importar e exportar códigos da base de dados
-Permite Obter algumas informações da BD INFORMATION_SCHEMA como: BD criadas, tabelas criadas e sua estrutura, procedimentos, triggers e eventos
+<p>
+	O Mysq Basic Lib é uma biblioteca desenvolvida em PHP para acesso a base de dados para o SGBD MySQL. Futuramente poderá ser extendida para uma ORM.
+	Esta biblioteca é baseada no conceito de ORM.
+	Pode funcionar como a camada de dados de uma aplicação (no caso da arquitectura Multicamadas)
+	Pode ser usada em pequenas e médias aplicações com MySQL.
+	Permite ao desenvolvedor aceder a base de dados apenas com os objectos e métodos.
+	Fornece Muitas das Funcionalidades do MySQL.
+	Alguns Métodos que acessam os comandos da DDL, DML e DCL.
+	Permite inserir, actualizar e obter registos nas tabelas
+	Permite Manipular as tabelas.
+	Permite criar, eliminar e alterar base de dados
+	Permite criar usuários, altribuir privilégios e manipular os usuários
+	Permite importar e exportar códigos da base de dados
+	Permite Obter algumas informações da BD INFORMATION_SCHEMA como: BD criadas, tabelas criadas e sua estrutura, procedimentos, triggers e eventos
+</p>
 
 Permite consultas ao critério do programador, com a classe que permite montar uma query por partes.
 
