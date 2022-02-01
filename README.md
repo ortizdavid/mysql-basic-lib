@@ -42,20 +42,19 @@ Funcionaldades Principais:
 </p>
 
 
-
+Vantagens: 
 <ul>
-	Vantagens: 
-	-Útil para aplicações em 3 camadas, resolvendo o problema da camada de dados
-	-Fácil uso dos métodos
-	-Código Bem Documentado e Fácil de alterar
-	-Código Legível 
-	-Uso de Boas Práticas de Programação
-	-Pouca Verbosidade
-	-Nomes de Métdos e Classes bem sugestivas
+	<li>Útil para aplicações em 3 camadas, resolvendo o problema da camada de dados</li>
+	<li>Fácil uso dos métodos</li>
+	<li>Código Bem Documentado e Fácil de alterar</li>
+	<li>Código Legível </li>
+	<li>Uso de Boas Práticas de Programação</li>
+	<li>Pouca Verbosidade</li>
+	<li>Nomes de Métdos e Classes bem sugestivas</li>
 </ul>
 
+Desvantagens:
 <ul>
-	Desvantagens:
 	<li>Uso limitado de comandos MySQL (por enquanto)</li>
 	</li>Algumas classes precisão amadurecer</li>
 </ul>
