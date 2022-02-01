@@ -19,11 +19,9 @@ Versão: 1
 
 Linguagem Usada: PHP versão 7.4.9
 
-Design Pattern Usado: Strategy, Abstract Factory
-
 Número de Classes: 13
 
-Número de Métodos:
+Funcionaldades Principais:
 
 <p>
 	O Mysq Basic Lib é uma biblioteca desenvolvida em PHP para acesso a base de dados para o SGBD MySQL. Futuramente poderá ser extendida para uma ORM.
@@ -39,12 +37,14 @@ Número de Métodos:
 	Permite criar usuários, altribuir privilégios e manipular os usuários
 	Permite importar e exportar códigos da base de dados
 	Permite Obter algumas informações da BD INFORMATION_SCHEMA como: BD criadas, tabelas criadas e sua estrutura, procedimentos, triggers e eventos
+	Permite consultas ao critério do programador, com a classe que permite montar uma query por partes.
+
 </p>
 
-Permite consultas ao critério do programador, com a classe que permite montar uma query por partes.
 
 
-Vantagens: 
+<ul>
+	Vantagens: 
 	-Útil para aplicações em 3 camadas, resolvendo o problema da camada de dados
 	-Fácil uso dos métodos
 	-Código Bem Documentado e Fácil de alterar
@@ -52,9 +52,12 @@ Vantagens:
 	-Uso de Boas Práticas de Programação
 	-Pouca Verbosidade
 	-Nomes de Métdos e Classes bem sugestivas
+</ul>
 
-Desvantagens:
-       -Uso limitado de comandos MySQL (por enquanto)
-       -Algumas classes precisão amadurecer
+<ul>
+	Desvantagens:
+	<li>Uso limitado de comandos MySQL (por enquanto)</li>
+	</li>Algumas classes precisão amadurecer</li>
+</ul>
 
 
