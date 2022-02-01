@@ -9,7 +9,7 @@
 <p>Pode ser usada em pequenas e médias aplicações com MySQL.</p>
 <p>Permite ao desenvolvedor aceder a base de dados apenas com os objectos e métodos.</p>
 
-Fornece Muitas das Funcionalidades do MySQL:
+## Fornece Muitas das Funcionalidades do MySQL:
 <ul>
 	<li>Alguns Métodos que acessam os comandos da DDL, DML e DCL</li>
 	<li>Permite inserir, actualizar e obter registos nas tabelas.</li>
@@ -22,7 +22,7 @@ Fornece Muitas das Funcionalidades do MySQL:
 </ul>
 
 
-Vantagens: 
+## Vantagens: 
 <ul>
 	<li>Útil para aplicações em 3 camadas, resolvendo o problema da camada de dados</li>
 	<li>Fácil uso dos métodos</li>
@@ -33,7 +33,7 @@ Vantagens:
 	<li>Nomes de Métdos e Classes bem sugestivas</li>
 </ul>
 
-Desvantagens:
+## Desvantagens:
 <ul>
 	<li>Uso limitado de comandos MySQL (por enquanto)</li>
 	</li>Algumas classes precisão amadurecer</li>
